@@ -1,44 +1,36 @@
 import mongoose from "mongoose"
-export const coolerWaterTestSchema = new mongoose.Schema({
-    type: Int!
-    date: String!
-    time: String!
-    testedby: String!
-    data: CoolerWaterTestData!
+
+export const GlycolLoop = new mongoose.Schema({
+  area: String,
+  conductivity: Number,
+  ph: Number,
+  glycolpercent: Number,
+})
+export const CoolingTowerData = new mongoose.Schema({
+  area: String,
+  totalhardness: Number,
+  conductivity: Number,
+  ph: Number,
+  ptsa: Number,
+  freechlorine: Number,
+})
+export const PlantRawWaterData = new mongoose.Schema({
+  totalhardness: Number,
+  conductivity: Number,
+  ph: Number,
+})
+export const CoolerWaterTestData = new mongoose.Schema({
+  plantrawwater: PlantRawWaterData,
+  coolingtowers: [CoolingTowerData],
+  glycolloop: [GlycolLoop],
 })
 
-const typeDefs = gql`
-  type CoolerWaterTest {
-    id: ID!
-    type: Int!
-    date: String!
-    time: String!
-    testedby: String!
-    data: CoolerWaterTestData!
-  }
-  type CoolerWaterTestData {
-    plantrawwater: PlantRawWaterData
-    coolingtowers: [CoolingTowerData]
-    glycolloop: [GlycolLoop]
-  }
-  type PlantRawWaterData {
-    totalhardness: Float
-    conductivity: Float
-    ph: Float
-  }
-  type CoolingTowerData {
-    area: String
-    totalhardness: Float
-    conductivity: Float
-    ph: Float
-    ptsa: Float
-    freechlorine: Float
-  }
-  type GlycolLoop {
-    area: String
-    conductivity: Float
-    ph: Float
-    glycolpercent: Float
-  }
-`
-export default typeDefs
+export const coolerWaterTestSchema = new mongoose.Schema({
+  date: String,
+  time: String,
+  testedby: String,
+  data: CoolerWaterTestData,
+})
+
+const CoolerWaterTest = mongoose.model("CoolerWaterTest", coolerWaterTestSchema)
+export default CoolerWaterTest

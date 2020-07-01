@@ -1,14 +1,15 @@
 import { gql } from "apollo-server"
-import * as Query from "../../"
 
 const typeDefs = gql`
   type CoolerWaterTest {
     id: ID!
-    type: Int!
     date: String!
     time: String!
     testedby: String!
     data: CoolerWaterTestData!
+  }
+  type Query {
+    coolerWaterTest: [CoolerWaterTest]
   }
   type CoolerWaterTestData {
     plantrawwater: PlantRawWaterData

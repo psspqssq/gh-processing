@@ -3,13 +3,13 @@ import { ApolloServer } from "apollo-server-express"
 import cors from "cors"
 
 import typeDefs from "../graphql/schemas/coolerWaterTest"
-/*import resolvers from "../graphql/resolvers/houseware.js"*/
-const port = process.env.PORT || 3333
+import resolvers from "../graphql/resolvers/coolerWaterTestResolver"
 
-const resolvers = {}
+const port = process.env.PORT || 3333
 
 const apolloServer = new ApolloServer({
   typeDefs,
+  resolvers,
 })
 
 const app = express()
@@ -28,5 +28,5 @@ app.all("*", (req, res) => {
 })
 
 app.listen(port, "0.0.0.0", () => {
-  console.log(`Services listening on http://localhost:${port}`)
+  console.log(`Services listening on http://localhost:${port}/graphql`)
 })

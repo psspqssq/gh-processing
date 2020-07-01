@@ -1,9 +1,11 @@
 import { gql } from "apollo-server"
 
 const typeDefs = gql`
+  type Query {
+    boilerWaterTest: [BoilerWaterTest]
+  }
   type BoilerWaterTest {
     id: ID!
-    type: Int!
     date: String!
     time: String!
     testedby: String!
@@ -35,6 +37,11 @@ const typeDefs = gql`
     conductivity: Float
     ph: Float
     blowdown: Boolean
+  }
+  type CondensateData {
+    totalhardness: Float
+    conductivity: Float
+    ph: Float
   }
 `
 export default typeDefs

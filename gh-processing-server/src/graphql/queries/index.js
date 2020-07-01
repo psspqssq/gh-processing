@@ -1,1 +1,1 @@
-export { default as coolerTest } from "./coolerTest"
+export { default as coolerWaterTest } from "./coolerWaterTest"
