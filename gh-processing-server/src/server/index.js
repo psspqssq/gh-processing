@@ -2,14 +2,12 @@ import express from "express"
 import { ApolloServer } from "apollo-server-express"
 import cors from "cors"
 
-import typeDefs from "../graphql/schemas/coolerWaterTest"
-import resolvers from "../graphql/resolvers/coolerWaterTestResolver"
+import schema from "../graphql/schemas"
 
 const port = process.env.PORT || 3333
 
 const apolloServer = new ApolloServer({
-  typeDefs,
-  resolvers,
+  schema,
 })
 
 const app = express()

@@ -1,15 +1,16 @@
 import { gql } from "apollo-server"
+import CoolerWaterTest from "../../db/models/CoolerWaterTest"
 
-const typeDefs = gql`
+export const typeDefs = gql`
+  extend type Query {
+    coolerWaterTest: [CoolerWaterTest]
+  }
   type CoolerWaterTest {
     id: ID!
     date: String!
     time: String!
     testedby: String!
     data: CoolerWaterTestData!
-  }
-  type Query {
-    coolerWaterTest: [CoolerWaterTest]
   }
   type CoolerWaterTestData {
     plantrawwater: PlantRawWaterData
@@ -36,4 +37,10 @@ const typeDefs = gql`
     glycolpercent: Float
   }
 `
-export default typeDefs
+export const resolvers = {
+  Query: {
+    coolerWaterTest: () => {
+      return CoolerWaterTest.find({})
+    },
+  },
+}

@@ -1,7 +1,7 @@
 import { gql } from "apollo-server"
 
-const typeDefs = gql`
-  type Query {
+export const typeDefs = gql`
+  extend type Query {
     boilerWaterTest: [BoilerWaterTest]
   }
   type BoilerWaterTest {
@@ -44,4 +44,4 @@ const typeDefs = gql`
     ph: Float
   }
 `
-export default typeDefs
+export const resolvers = {}
