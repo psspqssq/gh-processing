@@ -1,4 +1,5 @@
 import { gql } from "apollo-server"
+import BoilerWaterTest from "../../db/models/BoilerWaterTest"
 
 export const typeDefs = gql`
   extend type Query {
@@ -44,4 +45,10 @@ export const typeDefs = gql`
     ph: Float
   }
 `
-export const resolvers = {}
+export const resolvers = {
+  Query: {
+    boilerWaterTest: () => {
+      return BoilerWaterTest.find({})
+    },
+  },
+}
