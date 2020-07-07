@@ -1,2 +1,5 @@
-gh-processing-server/node_modules
+gh-processing-server/node_modules/*
+!gh-processing-server/node_modules/dbffile
+gh-processing-server/node_modules/dbffile/*
+!gh-processing-server/node_modules/dbffile/dist
 gh-processing-ui/node_modules
