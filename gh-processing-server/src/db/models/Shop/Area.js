@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 
 export const AreaSchema = new mongoose.Schema({
-  name: String,
+  name: { type: String, required: true },
   location: String,
   machines: [{ type: mongoose.Schema.Types.ObjectId, ref: "Machine" }],
   services: [{ type: mongoose.Schema.Types.ObjectId, ref: "Service" }],

@@ -8,6 +8,16 @@ import {
   typeDefs as coolerWaterTest,
   resolvers as coolerWaterTestResolvers,
 } from "./coolerWaterTest"
+import { typeDefs as area, resolvers as areaResolvers } from "./area.schema"
+import {
+  typeDefs as machine,
+  resolvers as machineResolvers,
+} from "./machine.schema"
+import {
+  typeDefs as service,
+  resolvers as serviceResolvers,
+} from "./service.schema"
+
 import { makeExecutableSchema } from "apollo-server"
 
 const Query = gql`
@@ -15,15 +25,31 @@ const Query = gql`
     _empty: String
   }
 `
+const Mutation = gql`
+  type Mutation {
+    _empty: String
+  }
+`
 
 const resolvers = {}
 
 const schema = makeExecutableSchema({
-  typeDefs: [Query, boilerWaterTest, coolerWaterTest],
+  typeDefs: [
+    Query,
+    Mutation,
+    boilerWaterTest,
+    coolerWaterTest,
+    area,
+    machine,
+    service,
+  ],
   resolvers: merge(
     resolvers,
     boilerWaterTestResolvers,
-    coolerWaterTestResolvers
+    coolerWaterTestResolvers,
+    areaResolvers,
+    machineResolvers,
+    serviceResolvers
   ),
 })
 
