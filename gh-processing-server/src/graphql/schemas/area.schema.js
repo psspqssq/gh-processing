@@ -9,7 +9,7 @@ export const typeDefs = gql`
     id: ID!
     name: String!
     location: String
-    machines: [ID]
+    machines: [Machine]
     services: [ID]
   }
 
@@ -27,16 +27,14 @@ export const typeDefs = gql`
 export const resolvers = {
   Query: {
     areas: () => {
-      return Area.find({})
+      return Area.find({}).populate("machines")
     },
   },
+
   Mutation: {
     CreateArea: (root, args) => {
       return new Promise((resolve, reject) => {
-        Area.insertMany({
-          name: args.area.name,
-          location: args.area.location,
-        }).then((results) => {
+        Area.insertMany({ ...args.area }).then((results) => {
           resolve(results)
         })
       })

@@ -1,4 +1,6 @@
 import mongoose from "mongoose"
+require("./models/Shop/Area")
+require("./models/Shop/Machine")
 mongoose.connect(
   process.env.DB_URL,
   {

@@ -4,12 +4,12 @@ export const MachineSchema = new mongoose.Schema({
   name: String,
   model: String,
   serialnumber: String,
-  brand: { type: mongoose.Schema.Types.ObjectId, ref: "Brand" },
-  notes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Note" }],
-  areas: [{ type: mongoose.Schema.Types.ObjectId, ref: "Area" }],
-  services: [{ type: mongoose.Schema.Types.ObjectId, ref: "Service" }],
-  suppliers: [{ type: mongoose.Schema.Types.ObjectId, ref: "Supplier" }],
-  parts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Part" }],
+  brand: { type: mongoose.Schema.Types.ObjectId, ref: "brand" },
+  notes: [{ type: mongoose.Schema.Types.ObjectId, ref: "note" }],
+  areas: [{ type: mongoose.Schema.Types.ObjectId, ref: "area" }],
+  services: [{ type: mongoose.Schema.Types.ObjectId, ref: "service" }],
+  suppliers: [{ type: mongoose.Schema.Types.ObjectId, ref: "supplier" }],
+  parts: [{ type: mongoose.Schema.Types.ObjectId, ref: "part" }],
 })
 
 const Machine = mongoose.model("machine", MachineSchema)
