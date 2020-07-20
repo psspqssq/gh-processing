@@ -1,5 +1,6 @@
 import mongoose from "mongoose"
 require("./Machine")
+require("./Service")
 
 export const AreaSchema = new mongoose.Schema({
   name: { type: String, required: true },

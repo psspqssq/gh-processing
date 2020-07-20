@@ -1,24 +1,9 @@
 import { gql } from "apollo-server"
 import { merge } from "lodash"
-import {
-  typeDefs as boilerWaterTest,
-  resolvers as boilerWaterTestResolvers,
-} from "./boilerWaterTest"
-import {
-  typeDefs as coolerWaterTest,
-  resolvers as coolerWaterTestResolvers,
-} from "./coolerWaterTest"
-import { typeDefs as area, resolvers as areaResolvers } from "./area.schema"
-import {
-  typeDefs as machine,
-  resolvers as machineResolvers,
-} from "./machine.schema"
-import {
-  typeDefs as service,
-  resolvers as serviceResolvers,
-} from "./service.schema"
-
+import loadSchemas from "../loadschemas"
 import { makeExecutableSchema } from "apollo-server"
+
+let exports = loadSchemas("shop", "watersystem")
 
 const Query = gql`
   type Query {
@@ -30,27 +15,21 @@ const Mutation = gql`
     _empty: String
   }
 `
-
-const resolvers = {}
+let resolvers = {}
+let typeDefsArray = [Query, Mutation]
+Object.keys(exports).forEach((item) => {
+  if (item == "default") return
+  if (exports[item].typeDefs != undefined) {
+    typeDefsArray = [...typeDefsArray, exports[item].typeDefs]
+  }
+  if (exports[item].resolvers != undefined) {
+    resolvers = merge(resolvers, exports[item].resolvers)
+  }
+})
 
 const schema = makeExecutableSchema({
-  typeDefs: [
-    Query,
-    Mutation,
-    boilerWaterTest,
-    coolerWaterTest,
-    area,
-    machine,
-    service,
-  ],
-  resolvers: merge(
-    resolvers,
-    boilerWaterTestResolvers,
-    coolerWaterTestResolvers,
-    areaResolvers,
-    machineResolvers,
-    serviceResolvers
-  ),
+  typeDefs: typeDefsArray,
+  resolvers: resolvers,
 })
 
 export default schema

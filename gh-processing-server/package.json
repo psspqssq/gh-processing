@@ -14,8 +14,10 @@
   "scripts": {
     "start:dev": "babel-node src/index.js",
     "start:cron": "babel-node src/cron.js",
+    "start:createrecord": "babel-node src/createrecord.js",
     "start:importdb": "babel-node src/importghdb.js",
-    "docker:start": "docker start acnh-collection-mongo",
+    "start:test": "babel-node src/graphql/schemas/shop/index.js",
+    "docker:start": "docker start gh-processing-mongo",
     "watch": "babel-watch src/index.js"
   },
   "dependencies": {

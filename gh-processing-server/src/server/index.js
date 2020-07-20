@@ -6,6 +6,7 @@ import schema from "../graphql/schemas"
 const bodyParser = require("body-parser")
 
 const port = process.env.PORT || 3333
+const graphql = process.env.GRAPHQL_ENDPOINT || "graphql"
 
 var jsonParser = bodyParser.json()
 
@@ -24,7 +25,7 @@ app.use(
 
 app.use(bodyParser.urlencoded({ extended: true }))
 
-apolloServer.applyMiddleware({ app, cors: false, path: "/api" })
+apolloServer.applyMiddleware({ app, cors: false, path: "/" + graphql })
 
 // Area Endpoint
 app.post("/v1/area", jsonParser, function (req, res) {
@@ -53,11 +54,13 @@ app.get("/v1/area", jsonParser, (req, res) => {
       res.status(200).send(result)
     }
   })
+    .populate("machines")
+    .populate("areas")
 })
 app.all("*", function (req, res) {
   res.status(404).json({ status: "Missing endpoint" })
 })
 
 app.listen(port, "0.0.0.0", () => {
-  console.log(`Services listening on http://localhost:${port}/api`)
+  console.log(`Services listening on http://localhost:${port}/${graphql}`)
 })

@@ -1,5 +1,5 @@
 import { gql } from "apollo-server"
-import Area from "../../db/models/Shop/Area"
+import Area from "../../../db/models/Shop/Area"
 
 export const typeDefs = gql`
   extend type Query {
@@ -10,7 +10,7 @@ export const typeDefs = gql`
     name: String!
     location: String
     machines: [Machine]
-    services: [ID]
+    services: [Service]
   }
 
   input AreaInput {
@@ -27,7 +27,10 @@ export const typeDefs = gql`
 export const resolvers = {
   Query: {
     areas: () => {
-      return Area.find({}).populate("machines")
+      return Area.find({}).populate({
+        path: "machines services",
+        populate: { path: "areas services" },
+      })
     },
   },
 

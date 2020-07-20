@@ -1,4 +1,6 @@
 import mongoose from "mongoose"
+require("./Area")
+require("./Service")
 
 export const MachineSchema = new mongoose.Schema({
   name: String,

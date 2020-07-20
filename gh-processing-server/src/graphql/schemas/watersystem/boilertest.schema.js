@@ -1,5 +1,5 @@
 import { gql } from "apollo-server"
-import BoilerWaterTest from "../../db/models/BoilerWaterTest"
+import BoilerWaterTest from "../../../db/models/WaterSystem/BoilerWaterTest"
 
 export const typeDefs = gql`
   extend type Query {

@@ -1,5 +1,5 @@
 import { gql } from "apollo-server"
-import Service from "../../db/models/Shop/Service"
+import Service from "../../../db/models/Shop/Service"
 
 export const typeDefs = gql`
   extend type Query {
