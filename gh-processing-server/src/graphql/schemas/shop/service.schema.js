@@ -10,23 +10,41 @@ export const typeDefs = gql`
   }
   type Service {
     id: ID!
+    type: Int
+    date: String
     subject: String
+    body: String
+    completeddate: String
+    machines: [Machine]
+    areas: [Area]
+    parts: [Part]
+    notes: [Note]
+    users: [User]
   }
   input ServiceInput {
-    name: String
+    type: Int
+    date: String
+    subject: String
+    body: String
+    completeddate: String
+    machines: [Machine]
+    areas: [Area]
+    parts: [Part]
+    notes: [Note]
+    users: [User]
   }
 `
 export const resolvers = {
   Query: {
     service: () => {
-      return Service.find({})
+      return Service.find({}).populate("machines areas parts notes users")
     },
   },
   Mutation: {
     CreateService: (root, args) => {
       return new Promise((resolve, reject) => {
         Service.insertMany({
-          name: args.service.name,
+          ...args.service,
         }).then((results) => {
           resolve(results)
         })

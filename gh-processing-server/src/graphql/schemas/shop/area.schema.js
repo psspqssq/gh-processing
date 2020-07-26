@@ -27,10 +27,7 @@ export const typeDefs = gql`
 export const resolvers = {
   Query: {
     areas: () => {
-      return Area.find({}).populate({
-        path: "machines services",
-        populate: { path: "areas services" },
-      })
+      return Area.find({}).populate("machines services")
     },
   },
 

@@ -1,6 +1,9 @@
 import mongoose from "mongoose"
 require("./Machine")
 require("./Area")
+require("./Part")
+require("./Note")
+require("./User")
 export const ServiceSchema = new mongoose.Schema({
   type: Number,
   date: String,
