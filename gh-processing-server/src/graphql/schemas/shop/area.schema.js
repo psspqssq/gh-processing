@@ -16,11 +16,11 @@ export const typeDefs = gql`
   input AreaInput {
     name: String!
     location: String
-    machines: [ID]
-    services: [ID]
+    machines: [String]
+    services: [String]
   }
   extend type Mutation {
-    CreateArea(area: AreaInput): [Area]
+    CreateArea(area: AreaInput): Area
   }
 `
 
@@ -32,12 +32,6 @@ export const resolvers = {
   },
 
   Mutation: {
-    CreateArea: (root, args) => {
-      return new Promise((resolve, reject) => {
-        Area.insertMany({ ...args.area }).then((results) => {
-          resolve(results)
-        })
-      })
-    },
+    CreateArea: (root, args) => {},
   },
 }

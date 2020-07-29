@@ -1,13 +1,54 @@
-import "dotenv/config"
-import "#root/db/connection"
+import { execute, makePromise } from "apollo-link"
+import { createHttpLink } from "apollo-link-http"
+import gql from "graphql-tag"
+import fetch from "node-fetch"
 
-import Service from "./db/models/Shop/Service"
+const uri = "http://localhost:3333/graphql"
+const link = createHttpLink({ uri, fetch })
 
-Service.insertMany({
-  type: 1,
-  date: "1-1-2020",
-  subject: "Test service",
-  body: "This is a test service, ignore it",
-  machines: ["5f0bcbbc2617455c386a812c", "5f0bcbc52617455c386a812e"],
-  areas: ["5f0b9e1817f5dd6fb0375168"],
+const AreaInput = {
+  name: "Test Area",
+  location: "t.t",
+  machines: ["5f0bcbc12617455c386a812d"],
+  services: ["5f122b2b4ffa4922f486e834"],
+}
+
+const operation = {
+  query: gql`
+    mutation {
+      CreateArea(
+        area: {
+          name: "Test Area"
+          machines: ["5f0bcbc12617455c386a812d"]
+          services: ["5f122b2b4ffa4922f486e834"]
+        }
+      ) {
+        id
+        name
+        machines {
+          id
+          name
+        }
+        services {
+          id
+          subject
+        }
+      }
+    }
+  `,
+}
+
+// execute returns an Observable so it can be subscribed to
+execute(link, operation).subscribe({
+  next: (data) =>
+    console.log(`received data: ${JSON.stringify(data, null, 2)}`),
+  error: (error) =>
+    console.log(`received error ${JSON.stringify(error, null, 2)}`),
+  complete: () => console.log(`complete`),
 })
+
+// For single execution operations, a Promise can be used
+/*
+makePromise(execute(link, operation))
+  .then((data) => console.log(`received data ${JSON.stringify(data, null, 2)}`))
+  .catch((error) => console.log(`received error ${error}`))*/

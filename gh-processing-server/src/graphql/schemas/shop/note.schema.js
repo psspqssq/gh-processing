@@ -2,7 +2,7 @@ import { gql } from "apollo-server"
 import Note from "../../../db/models/Shop/Note"
 export const typeDefs = gql`
   extend type Query {
-    machines: [Note]
+    notes: [Note]
   }
   type Note {
     id: ID!

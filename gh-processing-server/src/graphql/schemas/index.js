@@ -15,7 +15,9 @@ const Mutation = gql`
     _empty: String
   }
 `
-let resolvers = {}
+let resolvers = {
+  ID: (obj) => obj._id,
+}
 let typeDefsArray = [Query, Mutation]
 Object.keys(exports).forEach((item) => {
   if (item == "default") return

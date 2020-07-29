@@ -2,7 +2,7 @@ import { gql } from "apollo-server"
 import Media from "../../../db/models/Shop/Media"
 export const typeDefs = gql`
   extend type Query {
-    machines: [Media]
+    medias: [Media]
   }
   type Media {
     id: ID!

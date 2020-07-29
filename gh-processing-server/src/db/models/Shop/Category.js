@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 require("./Part")
 export const CategorySchema = new mongoose.Schema({
-  name: String,
+  name: { type: String, required: true, unique: true },
   parts: [{ type: mongoose.Schema.Types.ObjectId, ref: "part" }],
 })
 

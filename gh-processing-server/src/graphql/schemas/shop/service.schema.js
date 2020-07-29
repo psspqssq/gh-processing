@@ -3,7 +3,7 @@ import Service from "../../../db/models/Shop/Service"
 
 export const typeDefs = gql`
   extend type Query {
-    service: [Service]
+    services: [Service]
   }
   extend type Mutation {
     CreateService(service: ServiceInput): Service
@@ -27,16 +27,16 @@ export const typeDefs = gql`
     subject: String
     body: String
     completeddate: String
-    machines: [Machine]
-    areas: [Area]
-    parts: [Part]
-    notes: [Note]
-    users: [User]
+    machines: [ID]
+    areas: [ID]
+    parts: [ID]
+    notes: [ID]
+    users: [ID]
   }
 `
 export const resolvers = {
   Query: {
-    service: () => {
+    services: () => {
       return Service.find({}).populate("machines areas parts notes users")
     },
   },

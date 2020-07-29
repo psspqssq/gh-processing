@@ -3,7 +3,7 @@ import User from "../../../db/models/Shop/User"
 
 export const typeDefs = gql`
   extend type Query {
-    user: [User]
+    users: [User]
   }
   extend type Mutation {
     CreateUser(user: UserInput): User
@@ -25,14 +25,14 @@ export const typeDefs = gql`
     type: Int
     email: String
     phone: String
-    services: [Service]
-    notes: [Note]
-    orders: [Order]
+    services: [ID]
+    notes: [ID]
+    orders: [ID]
   }
 `
 export const resolvers = {
   Query: {
-    user: () => {
+    users: () => {
       return User.find({}).populate("services notes orders")
     },
   },

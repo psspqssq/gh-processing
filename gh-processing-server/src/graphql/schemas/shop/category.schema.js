@@ -15,7 +15,7 @@ export const typeDefs = gql`
     parts: [ID]
   }
   extend type Mutation {
-    CreateCategory(category: CategoryInput): [Category]
+    CreateCategory(category: CategoryInput): Category
   }
 `
 export const resolvers = {
@@ -28,9 +28,24 @@ export const resolvers = {
   Mutation: {
     CreateCategory: (root, args) => {
       return new Promise((resolve, reject) => {
-        Category.insertMany({ ...args.category }).then((results) => {
-          resolve(results)
-        })
+        Category.create({ ...args.category })
+          .then((result) => {
+            Category.findById(result._id)
+              .populate("parts")
+              .then((results) => {
+                resolve(results).catch((error) => {
+                  resolve(error)
+                })
+              })
+              .catch((error) => {
+                resolve(error)
+              })
+          })
+          .catch((error) => {
+            resolve(error)
+          })
+      }).catch((error) => {
+        resolve(error)
       })
     },
   },

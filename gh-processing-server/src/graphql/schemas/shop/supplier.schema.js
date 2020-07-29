@@ -3,7 +3,7 @@ import Supplier from "../../../db/models/Shop/Supplier"
 
 export const typeDefs = gql`
   extend type Query {
-    supplier: [Supplier]
+    suppliers: [Supplier]
   }
   extend type Mutation {
     CreateSupplier(supplier: SupplierInput): Supplier
@@ -29,7 +29,7 @@ export const typeDefs = gql`
 `
 export const resolvers = {
   Query: {
-    supplier: () => {
+    suppliers: () => {
       return Supplier.find({}).populate("contacts machines parts")
     },
   },

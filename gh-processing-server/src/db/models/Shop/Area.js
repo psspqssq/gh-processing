@@ -3,7 +3,7 @@ require("./Machine")
 require("./Service")
 
 export const AreaSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+  name: { type: String, required: true, unique: true },
   location: String,
   machines: [{ type: mongoose.Schema.Types.ObjectId, ref: "machine" }],
   services: [{ type: mongoose.Schema.Types.ObjectId, ref: "service" }],
