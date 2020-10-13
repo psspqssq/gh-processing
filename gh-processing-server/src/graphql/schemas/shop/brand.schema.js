@@ -3,6 +3,7 @@ import Brand from "../../../db/models/Shop/Brand"
 export const typeDefs = gql`
   extend type Query {
     brands: [Brand]
+    brand(name: String!): Brand
   }
   type Brand {
     id: ID!
@@ -25,6 +26,9 @@ export const resolvers = {
   Query: {
     brands: () => {
       return Brand.find({}).populate("contacts machines parts")
+    },
+    brand: (root, args) => {
+      return Brand.findOne({ name: args.name })
     },
   },
 
