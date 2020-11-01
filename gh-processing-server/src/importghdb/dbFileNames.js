@@ -1,0 +1,5 @@
+export const AREADBF = "C://Users//MSI//Documents//GH Processing//data//dat_area.dbf"
+export const CATEGORIESDBF = "C://Users//MSI//Documents//GH Processing//data//dat_cat.dbf"
+export const MACHINERYDBF = "C://Users//MSI//Documents//GH Processing//data//machinery.dbf"
+export const PARTSDBF = "C://Users//MSI//Documents//GH Processing//data//parts.dbf"
+export const NOTESDBF = "C://Users//MSI//Documents//GH Processing//data//dat_notes.dbf"

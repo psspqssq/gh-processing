@@ -8,117 +8,98 @@ import { getArea, createArea } from "./areaQueries"
 import { getBrand, createBrand } from "./brandQueries"
 import { createPart } from "./partQueries"
 import { createCategory } from "./categoryQueries"
+import { createMachine } from "./machineQueries"
+import { createNote } from "./noteQueries"
+import * as dbFilenames from "./dbFileNames"
 
 // Aight, I should first insert all the information that I have about x stuff, then create the data that doesnt exist on the database.
 // THEN create the relationships
+// Disclaimer: I can't wrap my head around how asynchronous stuff should work, so I'll add stuff to DB and let mongo filter out duplicates.
 
 const uri = "http://localhost:3333/graphql"
 const link = createHttpLink({ uri, fetch })
 
+async function readDBFFile(filename) {
+  let dbf = await DBFFile.open(filename)
+  return await dbf.readRecords()
+}
 
 // Areas come from dat_area.dbf
 async function importAreas() {
-  let dbf = await DBFFile.open(
-    "C://Users//MSI//Documents//GH Processing//data//dat_area.dbf"
-  )
-  console.log(`Areas DBF file contains ${dbf.recordCount} records.`)
-  let records = await dbf.readRecords()
+  let records = readDBFFile(dbFilenames.AREADBF)
   for (let record of records) createArea(record)
 }
 
 // Categories come from dat_cat.dbf
 async function importCategories() {
-  let dbf = await DBFFile.open(
-    "C://Users//MSI//Documents//GH Processing//data//dat_cat.dbf"
-  )
-  console.log(`Categories DBF file contains ${dbf.recordCount} records.`)
-  let records = await dbf.readRecords()
-  for (let record of records) {
-    createCategory(record)
-  }
+  let records = readDBFFile(dbFilenames.CATEGORIESDBF)
+  for (let record of records) createCategory(record)
 }
 
-/* Brand comes from importMachines() and importParts() 
-   Contacts comes from importMachines() and importParts() 
-   Media comes from importMachines() and importParts() 
-   Suppliers comes from importMachines() and importParts() */
-
 // Machines come from machinery.dbf
+// Areas comes from machinery.dbf
+// Brands comes from machinery.dbf
+// Contacts comes from machinery.dbf
+// Media comes from machinery.dbf
+// Suppliers comes from machinery.dbf
+
 async function importMachines() {
-  let dbf = await DBFFile.open(
-    "C://Users//MSI//Documents//GH Processing//data//machinery.dbf"
-  )
-  console.log(`Machinery DBF file contains ${dbf.recordCount} records.`)
-  let records = await dbf.readRecords()
-  
-  // Iterate through all the records
-  for (const record of records) {
-    if (record.MACHINERY != null) {
-      // Query for getting the Area ID, if no results are returned, a new record must be created.
-      const areasFound = await getArea(record)
-      if(areasFound){
-        areasFound.subscribe({
-          next: (data) =>
-            {
-              if(!data.data.area) {
-              // Area not found on DB, should create the record.AREA record
-              console.log(`${record.AREA} area not found on DB, should create record`)
-              createArea(record)
-            }else{
-              console.log(`found ${record.AREA}`)
-            }},
-          error: (error) =>
-            console.log(`received error ${JSON.stringify(error, null, 2)}`)
-        })
-      }
-    }
+  let records = await readDBFFile(dbFilenames.MACHINERYDBF)
+  for (let record of records) {
+    console.log(record)
     continue
-    const gqlmutation = {
-      query: gql`
-        mutation createCategory($input: MachineInput) {
-          CreateMachine(machine: $input) {
-            id
-            name
-          }
-        }
-      `,
-      variables: {
-        input: {
-          name: sanitizeName(record.MACHINERY),
-          //Continue HERE
-        },
-      },
-    }
-    execute(link, gqlmutation).subscribe({
-      next: (data) =>
-        console.log(`received data: ${JSON.stringify(data, null, 2)}`),
-      error: (error) =>
-        console.log(`received error ${JSON.stringify(error, null, 2)}`),
-      complete: () => console.log(`complete`),
-    })
+    createMachine(record)
+    createAreaFromMachine(record, machineID)
+    createBrandFromMachine(record, machineID)
+    createMediaFromMachine(record, machineID)
   }
 }
 
 // Parts come from parts.dbf
+// Orders come from parts.dbf
+// Categories comes from parts.dbf
+// Machinery comes from parts.dbf
+// Notes comes from parts.dbf
+// Supplier comes from parts.dbf
+// Contact comes from parts.dbf
+// Brand comes from parts.dbf
+// Media comes from parts.dbf
 async function importParts() {
-  let dbf = await DBFFile.open(
-    "C://Users//MSI//Documents//GH Processing//data//parts.dbf"
-  )
-  console.log(`DBF file contains ${dbf.recordCount} records.`)
-  let records = await dbf.readRecords()
-  for (let record of records) createPart(record)
+  let records = await readDBFFile(dbFilenames.PARTSDBF)
+  for (let record of records) {
+    console.log(record)
+    continue
+    createPart(record)
+    createOrder(record)
+    createCategoryFromPart(record, partID)
+    createMachineryFromPart(record, partID)
+    createNoteFromPart(record, partID)
+    createSupplierFromPart(record, partID)
+    createContactFromPart(record, partID)
+    createBrandFromPart(record, partID)
+    createMediaFromPart(record, partID)
+  }
 }
 
 // Notes come from dat_notes.dbf
-
-// Orders come from parts.dbf (only pen_ord should be added)
+async function importNotes() {
+  let records = await readDBFFile(dbFilenames.NOTESDBF)
+  for (let record of records) createNote(record)
+}
 
 // Services comes dat_mpr.dbf
+async function importServices() {
+  let records = await readDBFFile(dbFilenames.SERVICESDBF)
+  for (let record of records) {
+    createService(record)
+    createAreaFromService(record)
+  }
+}
 
-// Users will be created on interface
+// Users will be created on frontend
 
 async function test() {
-  importMachines()
+  importParts()
 }
 
 test()

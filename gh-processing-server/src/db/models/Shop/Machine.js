@@ -4,6 +4,7 @@ require("./Service")
 
 export const MachineSchema = new mongoose.Schema({
   name: String,
+  details: String,
   model: String,
   serialnumber: String,
   brand: { type: mongoose.Schema.Types.ObjectId, ref: "brand" },

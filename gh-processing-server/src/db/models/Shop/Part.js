@@ -9,10 +9,11 @@ require("./Media")
 require("./Note")
 export const PartSchema = new mongoose.Schema({
   partnumber: String,
+  description: String,
   availablestock: Number,
   location: String,
   reorderlevel: Number,
-  discontinued: String,
+  discontinued: Boolean,
   serialnumber: String,
   model: String,
   price: Number,

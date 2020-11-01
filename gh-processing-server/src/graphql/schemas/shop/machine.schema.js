@@ -7,6 +7,7 @@ export const typeDefs = gql`
   type Machine {
     id: ID!
     name: String!
+    details: String
     model: String
     serialnumber: String
     brand: Brand
@@ -19,6 +20,7 @@ export const typeDefs = gql`
 
   input MachineInput {
     name: String!
+    details: String
     model: String
     serialnumber: String
     brand: ID
@@ -35,9 +37,7 @@ export const typeDefs = gql`
 export const resolvers = {
   Query: {
     machines: () => {
-      return Machine.find({}).populate(
-        "brand notes areas services suppliers parts"
-      )
+      return Machine.find({}).populate("brand notes areas services suppliers parts")
     },
   },
   Mutation: {

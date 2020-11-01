@@ -7,10 +7,11 @@ export const typeDefs = gql`
   type Part {
     id: ID!
     partnumber: String!
+    description: String
     availablestock: Float
     location: String
     reorderlevel: Float
-    discontinued: String
+    discontinued: Boolean
     serialnumber: String
     model: String
     price: Float
@@ -27,10 +28,11 @@ export const typeDefs = gql`
 
   input PartInput {
     partnumber: String!
+    description: String
     availablestock: Float
     location: String
     reorderlevel: Float
-    discontinued: String
+    discontinued: Boolean
     serialnumber: String
     model: String
     price: Float
@@ -52,9 +54,7 @@ export const typeDefs = gql`
 export const resolvers = {
   Query: {
     parts: () => {
-      return Part.find({}).populate(
-        "brand notes machines services categories orders suppliers medias"
-      )
+      return Part.find({}).populate("brand notes machines services categories orders suppliers medias")
     },
   },
   Mutation: {
