@@ -1,23 +1,19 @@
 import { DBFFile } from "dbffile"
-import { execute, makePromise } from "apollo-link"
-import { createHttpLink } from "apollo-link-http"
-import gql from "graphql-tag"
-import fetch from "node-fetch"
-import { sanitizeName } from "./sanitizeName"
-import { getArea, createArea } from "./areaQueries"
-import { getBrand, createBrand } from "./brandQueries"
 import { createPart } from "./partQueries"
-import { createCategory } from "./categoryQueries"
-import { createMachine } from "./machineQueries"
-import { createNote } from "./noteQueries"
+import { createMachine, createMachineFromPart } from "./machineQueries"
+import { createArea, createAreaFromMachine, createAreaFromService } from "./areaQueries"
+import { createBrandFromMachine, createBrandFromPart } from "./brandQueries"
+import { createCategory, createCategoryFromPart } from "./categoryQueries"
+import { createNote, createNoteFromPart } from "./noteQueries"
+import { createMediaFromMachine, createMediaFromPart } from "./mediaQueries"
+import { createOrder } from "./orderQueries"
+import { createSupplierFromPart } from "./supplierQueries"
+import { createContactFromPart } from "./contactQueries"
 import * as dbFilenames from "./dbFileNames"
 
 // Aight, I should first insert all the information that I have about x stuff, then create the data that doesnt exist on the database.
 // THEN create the relationships
-// Disclaimer: I can't wrap my head around how asynchronous stuff should work, so I'll add stuff to DB and let mongo filter out duplicates.
-
-const uri = "http://localhost:3333/graphql"
-const link = createHttpLink({ uri, fetch })
+// Removed disclaimer, i kinda know what to do
 
 async function readDBFFile(filename) {
   let dbf = await DBFFile.open(filename)
@@ -46,12 +42,17 @@ async function importCategories() {
 async function importMachines() {
   let records = await readDBFFile(dbFilenames.MACHINERYDBF)
   for (let record of records) {
-    console.log(record)
-    continue
     createMachine(record)
-    createAreaFromMachine(record, machineID)
-    createBrandFromMachine(record, machineID)
-    createMediaFromMachine(record, machineID)
+    /*.subscribe({
+      next: (data) => {
+        console.log(`record: ${record}\njson: ${JSON.stringify(data, null, 2)}`)
+        /*createAreaFromMachine(record, data.id)
+        createBrandFromMachine(record, data.id)
+        createMediaFromMachine(record, data.id)
+      },
+      error: (error) => console.log(`received error ${JSON.stringify(error, null, 2)}`),
+      complete: () => console.log(`complete`),
+    })*/
   }
 }
 
@@ -72,7 +73,7 @@ async function importParts() {
     createPart(record)
     createOrder(record)
     createCategoryFromPart(record, partID)
-    createMachineryFromPart(record, partID)
+    createMachineFromPart(record, partID)
     createNoteFromPart(record, partID)
     createSupplierFromPart(record, partID)
     createContactFromPart(record, partID)
@@ -99,7 +100,7 @@ async function importServices() {
 // Users will be created on frontend
 
 async function test() {
-  importParts()
+  importMachines()
 }
 
 test()

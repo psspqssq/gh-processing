@@ -9,32 +9,44 @@ import { sanitizeName } from "./sanitizeName"
 const uri = "http://localhost:3333/graphql"
 const link = createHttpLink({ uri, fetch })
 
-export const createMachine = (record) => {
+export const createMachine = async (record) => {
   if (sanitizeName(record.MACHINERY) != undefined) {
-    const gqlmutation = {
-      query: gql`
-        mutation createMachine($input: MachineInput) {
-          CreateMachine(machine: $input) {
-            id
-            name
-            model
-            serialnumber
+    let something = await getMachine(record)
+    something.subscribe({
+      next: (data) => {
+        console.log(`Datos: ${JSON.stringify(data, null, 2)}`)
+        if (data.data.machine != null) console.log(`${sanitizeName(record.MACHINERY)} already on db`)
+        else {
+          console.log(`${sanitizeName(record.MACHINERY)} not on db`)
+          const gqlmutation = {
+            query: gql`
+              mutation createMachine($input: MachineInput) {
+                CreateMachine(machine: $input) {
+                  id
+                  name
+                  model
+                  serialnumber
+                }
+              }
+            `,
+            variables: {
+              input: {
+                name: sanitizeName(record.MACHINERY),
+                details: sanitizeName(record.DETAILS),
+                model: sanitizeName(record.MODEL),
+                serialnumber: sanitizeName(record.SN, true),
+              },
+            },
           }
+          execute(link, gqlmutation).subscribe({
+            next: (data) => {
+              // Must continue here...
+            },
+          })
         }
-      `,
-      variables: {
-        input: {
-          name: sanitizeName(record.MACHINERY),
-          details: sanitizeName(record.DETAILS),
-          model: sanitizeName(record.MODEL),
-          serialnumber: sanitizeName(record.SN, true),
-        },
       },
-    }
-    execute(link, gqlmutation).subscribe({
-      next: (data) => console.log(`received data: ${JSON.stringify(data, null, 2)}`),
       error: (error) => console.log(`received error ${JSON.stringify(error, null, 2)}`),
-      complete: () => console.log(`complete`),
+      complete: () => {},
     })
   }
 }
@@ -52,7 +64,7 @@ export const getMachine = async (record) => {
         }
       `,
       variables: {
-        name: sanitizeName(record.AREA),
+        name: sanitizeName(record.MACHINERY),
       },
     }
     return execute(link, machinequery)

@@ -3,6 +3,7 @@ import Machine from "../../../db/models/Shop/Machine"
 export const typeDefs = gql`
   extend type Query {
     machines: [Machine]
+    machine(name: String!): Machine
   }
   type Machine {
     id: ID!
@@ -38,6 +39,9 @@ export const resolvers = {
   Query: {
     machines: () => {
       return Machine.find({}).populate("brand notes areas services suppliers parts")
+    },
+    machine: (root, args) => {
+      return Machine.findOne({ name: args.name })
     },
   },
   Mutation: {
