@@ -42,17 +42,18 @@ async function importCategories() {
 async function importMachines() {
   let records = await readDBFFile(dbFilenames.MACHINERYDBF)
   for (let record of records) {
-    createMachine(record)
-    /*.subscribe({
+    let createMachineQuery = await createMachine(record)
+    createMachineQuery.subscribe({
       next: (data) => {
         console.log(`record: ${record}\njson: ${JSON.stringify(data, null, 2)}`)
-        /*createAreaFromMachine(record, data.id)
+        /*
+        createAreaFromMachine(record, data.id)
         createBrandFromMachine(record, data.id)
-        createMediaFromMachine(record, data.id)
+        createMediaFromMachine(record, data.id)*/
       },
       error: (error) => console.log(`received error ${JSON.stringify(error, null, 2)}`),
       complete: () => console.log(`complete`),
-    })*/
+    })
   }
 }
 

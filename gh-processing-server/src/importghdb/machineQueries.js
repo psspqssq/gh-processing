@@ -10,45 +10,45 @@ const uri = "http://localhost:3333/graphql"
 const link = createHttpLink({ uri, fetch })
 
 export const createMachine = async (record) => {
-  if (sanitizeName(record.MACHINERY) != undefined) {
-    let something = await getMachine(record)
-    something.subscribe({
-      next: (data) => {
-        console.log(`Datos: ${JSON.stringify(data, null, 2)}`)
-        if (data.data.machine != null) console.log(`${sanitizeName(record.MACHINERY)} already on db`)
-        else {
-          console.log(`${sanitizeName(record.MACHINERY)} not on db`)
-          const gqlmutation = {
-            query: gql`
-              mutation createMachine($input: MachineInput) {
-                CreateMachine(machine: $input) {
-                  id
-                  name
-                  model
-                  serialnumber
+  return new Promise(async (resolve, reject) => {
+    if (sanitizeName(record.MACHINERY) != undefined) {
+      let machineQueryResults = await getMachine(record)
+      machineQueryResults.subscribe({
+        next: (data) => {
+          if (data.data.machine != null) {
+            console.log(`${sanitizeName(record.MACHINERY)} already on db`)
+
+            resolve(getMachine(record))
+          } else {
+            console.log(`${sanitizeName(record.MACHINERY)} not on db`)
+            const gqlmutation = {
+              query: gql`
+                mutation createMachine($input: MachineInput) {
+                  CreateMachine(machine: $input) {
+                    id
+                    name
+                    model
+                    serialnumber
+                  }
                 }
-              }
-            `,
-            variables: {
-              input: {
-                name: sanitizeName(record.MACHINERY),
-                details: sanitizeName(record.DETAILS),
-                model: sanitizeName(record.MODEL),
-                serialnumber: sanitizeName(record.SN, true),
+              `,
+              variables: {
+                input: {
+                  name: sanitizeName(record.MACHINERY),
+                  details: sanitizeName(record.DETAILS),
+                  model: sanitizeName(record.MODEL),
+                  serialnumber: sanitizeName(record.SN, true),
+                },
               },
-            },
+            }
+            resolve(execute(link, gqlmutation))
           }
-          execute(link, gqlmutation).subscribe({
-            next: (data) => {
-              // Must continue here...
-            },
-          })
-        }
-      },
-      error: (error) => console.log(`received error ${JSON.stringify(error, null, 2)}`),
-      complete: () => {},
-    })
-  }
+        },
+        error: (error) => console.log(`received error ${JSON.stringify(error, null, 2)}`),
+        complete: () => {},
+      })
+    }
+  })
 }
 
 // Since this is an async function I can't give a result until it is resolved, so I'll return the observable and subscribe on it.
