@@ -15,13 +15,15 @@ export const typeDefs = gql`
   }
 
   input AreaInput {
-    name: String!
+    id: ID
+    name: String
     location: String
-    machines: [String]
+    machines: [ID]
     services: [String]
   }
   extend type Mutation {
     CreateArea(area: AreaInput): Area
+    UpdateArea(machines: AreaInput): Area
   }
 `
 
@@ -31,7 +33,7 @@ export const resolvers = {
       return Area.find({}).populate("machines services")
     },
     area: (root, args) => {
-      return Area.findOne({ name: args.name })
+      return Area.findOne({ name: args.name }).populate("machines services")
     },
   },
 
@@ -56,6 +58,16 @@ export const resolvers = {
           })
       }).catch((error) => {
         resolve(error)
+      })
+    },
+    UpdateArea: (root, args) => {
+      return new Promise((resolve, reject) => {
+        console.log(args)
+        Area.findByIdAndUpdate(args.machines.id, { machines: args.machines.machines }, { new: true })
+          .populate("machines")
+          .then((results) => {
+            resolve(results)
+          })
       })
     },
   },

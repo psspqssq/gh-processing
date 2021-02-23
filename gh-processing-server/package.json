@@ -6,7 +6,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.10.2",
+    "@babel/core": "^7.12.16",
     "@babel/preset-env": "^7.6.3",
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-watch": "^7.0.0"
@@ -15,19 +15,19 @@
     "start:dev": "babel-node src/index.js",
     "start:cron": "babel-node src/cron.js",
     "start:createrecord": "babel-node src/createrecord.js",
-    "start:importdb": "babel-node src//importghdb/importghdb.js",
-    "start:test": "babel-node src/graphql/schemas/shop/index.js",
+    "start:importdb": "babel-node src/importghdb/importghdb.js",
     "docker:start": "docker start gh-processing-mongo",
     "watch": "babel-watch src/index.js"
   },
   "dependencies": {
-    "@babel/node": "^7.10.1",
+    "@babel/cli": "^7.12.16",
+    "@babel/node": "^7.12.16",
     "@babel/plugin-transform-runtime": "^7.10.1",
     "@babel/runtime": "^7.10.2",
     "apollo-link-http": "^1.5.17",
     "apollo-server": "^2.14.3",
     "apollo-server-express": "^2.14.3",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dbffile": "^1.4.3",
