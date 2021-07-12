@@ -22,13 +22,13 @@ async function readDBFFile(filename) {
 
 // Areas come from dat_area.dbf
 async function importAreas() {
-  let records = readDBFFile(dbFilenames.AREADBF)
+  let records = await readDBFFile(dbFilenames.AREADBF)
   for (let record of records) createArea(record)
 }
 
 // Categories come from dat_cat.dbf
 async function importCategories() {
-  let records = readDBFFile(dbFilenames.CATEGORIESDBF)
+  let records = await readDBFFile(dbFilenames.CATEGORIESDBF)
   for (let record of records) createCategory(record)
 }
 
@@ -45,10 +45,9 @@ async function importMachines() {
     let createMachineQuery = await createMachine(record)
     createMachineQuery.subscribe({
       next: (data) => {
-        console.log(data)
         createAreaFromMachine(record, data.data.machine.id)
-        createBrandFromMachine(record, data.id) /*
-        createMediaFromMachine(record, data.id)*/
+        //createBrandFromMachine(record, data.data.machine.id)
+        //createMediaFromMachine(record, data.id)
       },
       error: (error) => console.log(`received error ${JSON.stringify(error, null, 2)}`),
       complete: () => console.log(`complete`),
@@ -100,7 +99,13 @@ async function importServices() {
 // Users will be created on frontend
 
 async function test() {
+  console.log("Downloading old database into machine...")
+  importAreas()
+  importCategories()
   importMachines()
+  // importParts()
+  // importNotes()
+  // importServices()
 }
 
 test()

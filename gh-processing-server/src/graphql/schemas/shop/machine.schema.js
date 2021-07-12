@@ -32,7 +32,7 @@ export const typeDefs = gql`
     parts: [ID]
   }
   extend type Mutation {
-    CreateMachine(machine: MachineInput): [Machine]
+    CreateMachine(machine: MachineInput): Machine
   }
 `
 export const resolvers = {
@@ -47,11 +47,24 @@ export const resolvers = {
   Mutation: {
     CreateMachine: (root, args) => {
       return new Promise((resolve, reject) => {
-        Machine.insertMany({
-          ...args.machine,
-        }).then((results) => {
-          resolve(results)
-        })
+        Machine.create({ ...args.machine })
+          .then((result) => {
+            Machine.findById(result._id)
+              .populate("notes areas services suppliers parts")
+              .then((results) => {
+                resolve(results).catch((error) => {
+                  resolve(error)
+                })
+              })
+              .catch((error) => {
+                resolve(error)
+              })
+          })
+          .catch((error) => {
+            resolve(error)
+          })
+      }).catch((error) => {
+        resolve(error)
       })
     },
   },

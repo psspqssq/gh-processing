@@ -13,6 +13,7 @@ export const typeDefs = gql`
     parts: [Part]
   }
   input BrandInput {
+    id: ID
     name: String
     contacts: [ID]
     machines: [ID]
@@ -20,6 +21,7 @@ export const typeDefs = gql`
   }
   extend type Mutation {
     CreateBrand(brand: BrandInput): [Brand]
+    UpdateBrand(machines: BrandInput): Brand
   }
 `
 export const resolvers = {
@@ -28,16 +30,41 @@ export const resolvers = {
       return Brand.find({}).populate("contacts machines parts")
     },
     brand: (root, args) => {
-      return Brand.findOne({ name: args.name })
+      return Brand.findOne({ name: args.name }).populate("machines")
     },
   },
 
   Mutation: {
     CreateBrand: (root, args) => {
       return new Promise((resolve, reject) => {
-        Brand.insertMany({ ...args.brand }).then((results) => {
-          resolve(results)
-        })
+        Brand.create({ ...args.brand })
+          .then((result) => {
+            Brand.findById(result._id)
+              .populate("machines")
+              .then((results) => {
+                resolve(results).catch((error) => {
+                  resolve(error)
+                })
+              })
+              .catch((error) => {
+                resolve(error)
+              })
+          })
+          .catch((error) => {
+            resolve(error)
+          })
+      }).catch((error) => {
+        resolve(error)
+      })
+    },
+    UpdateBrand: (root, args) => {
+      return new Promise((resolve, reject) => {
+        console.log(args)
+        Brand.findByIdAndUpdate(args.machines.id, { machines: args.machines.machines }, { new: true })
+          .populate("machines")
+          .then((results) => {
+            resolve(results)
+          })
       })
     },
   },
