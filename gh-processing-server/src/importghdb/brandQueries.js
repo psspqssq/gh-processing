@@ -8,11 +8,11 @@ const uri = "http://localhost:3333/graphql"
 const link = createHttpLink({ uri, fetch })
 
 export const createBrand = (record) => {
-  if (record.CAT != undefined) {
+  if (record.BRAND != undefined) {
     const gqlmutation = {
       query: gql`
-        mutation createCategory($input: CategoryInput) {
-          CreateCategory(category: $input) {
+        mutation createBrand($input: BrandInput) {
+          CreateBrand(brand: $input) {
             id
             name
           }
@@ -20,7 +20,7 @@ export const createBrand = (record) => {
       `,
       variables: {
         input: {
-          name: sanitizeName(record.CAT),
+          name: sanitizeName(record.BRAND),
         },
       },
     }
@@ -69,20 +69,27 @@ export const createBrandFromMachine = async (record, id) => {
               const newMachines = [id]
               resolve(updateBrandMachines(newMachines, data.data.brand.id))
             } else {
-              if (id in data.data.brand.machines) {
-                console.log("already on record")
-                resolve(getBrand(record))
-              } else {
-                let newMachines = [id]
-                console.log(data.data.brand)
-                Promise.all(
-                  data.data.brand.machines.map((machine) => {
-                    newMachines = [...newMachines, machine.id]
-                  })
-                ).then(() => {
-                  resolve(updateBrandMachines(newMachines, data.data.brand.id))
+              let inlist = false
+              Promise.all(
+                data.data.brand.machines.map((machine) => {
+                  if (machine.id == id) inlist = true
                 })
-              }
+              ).then(() => {
+                if (inlist) {
+                  console.log("already on record")
+                  resolve(getBrand(record))
+                } else {
+                  let newMachines = [id]
+                  console.log(data.data.brand)
+                  Promise.all(
+                    data.data.brand.machines.map((machine) => {
+                      newMachines = [...newMachines, machine.id]
+                    })
+                  ).then(() => {
+                    resolve(updateBrandMachines(newMachines, data.data.brand.id))
+                  })
+                }
+              })
             }
           } else {
             console.log(`${sanitizeName(record.AREA)} not on db`)

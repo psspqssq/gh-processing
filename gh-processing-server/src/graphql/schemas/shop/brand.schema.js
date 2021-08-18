@@ -20,7 +20,7 @@ export const typeDefs = gql`
     parts: [ID]
   }
   extend type Mutation {
-    CreateBrand(brand: BrandInput): [Brand]
+    CreateBrand(brand: BrandInput): Brand
     UpdateBrand(machines: BrandInput): Brand
   }
 `

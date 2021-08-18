@@ -72,20 +72,27 @@ export const createAreaFromMachine = async (record, id) => {
               const newMachines = [id]
               resolve(updateAreaMachines(newMachines, data.data.area.id))
             } else {
-              if (id in data.data.area.machines) {
-                console.log("already on record")
-                resolve(getArea(record))
-              } else {
-                let newMachines = [id]
-                console.log(data.data.area)
-                Promise.all(
-                  data.data.area.machines.map((machine) => {
-                    newMachines = [...newMachines, machine.id]
-                  })
-                ).then(() => {
-                  resolve(updateAreaMachines(newMachines, data.data.area.id))
+              let inlist = false
+              Promise.all(
+                data.data.area.machines.map((machine) => {
+                  if (machine.id == id) inlist = true
                 })
-              }
+              ).then(() => {
+                if (inlist) {
+                  console.log("already on record")
+                  resolve(getArea(record))
+                } else {
+                  let newMachines = [id]
+                  console.log(data.data.area)
+                  Promise.all(
+                    data.data.area.machines.map((machine) => {
+                      newMachines = [...newMachines, machine.id]
+                    })
+                  ).then(() => {
+                    resolve(updateAreaMachines(newMachines, data.data.area.id))
+                  })
+                }
+              })
             }
           } else {
             console.log(`${sanitizeName(record.AREA)} not on db`)

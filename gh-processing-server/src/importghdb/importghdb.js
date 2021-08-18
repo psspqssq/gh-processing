@@ -45,9 +45,12 @@ async function importMachines() {
     let createMachineQuery = await createMachine(record)
     createMachineQuery.subscribe({
       next: (data) => {
-        createAreaFromMachine(record, data.data.machine.id)
-        //createBrandFromMachine(record, data.data.machine.id)
-        //createMediaFromMachine(record, data.id)
+        let machineid = ""
+        if ("machine" in data.data) machineid = data.data.machine.id
+        if ("CreateMachine" in data.data) machineid = data.data.CreateMachine.id
+        createAreaFromMachine(record, machineid)
+        createBrandFromMachine(record, machineid)
+        createMediaFromMachine(record, machineid)
       },
       error: (error) => console.log(`received error ${JSON.stringify(error, null, 2)}`),
       complete: () => console.log(`complete`),
