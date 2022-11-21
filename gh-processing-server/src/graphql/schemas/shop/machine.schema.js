@@ -1,5 +1,5 @@
-import { gql } from "apollo-server"
-import Machine from "../../../db/models/Shop/Machine"
+import { gql } from "apollo-server";
+import Machine from "../../../db/models/Shop/Machine";
 export const typeDefs = gql`
   extend type Query {
     machines: [Machine]
@@ -34,14 +34,14 @@ export const typeDefs = gql`
   extend type Mutation {
     CreateMachine(machine: MachineInput): Machine
   }
-`
+`;
 export const resolvers = {
   Query: {
     machines: () => {
-      return Machine.find({}).populate("brand notes areas services suppliers parts")
+      return Machine.find({});
     },
     machine: (root, args) => {
-      return Machine.findOne({ name: args.name })
+      return Machine.findOne({ name: args.name });
     },
   },
   Mutation: {
@@ -50,22 +50,21 @@ export const resolvers = {
         Machine.create({ ...args.machine })
           .then((result) => {
             Machine.findById(result._id)
-              .populate("notes areas services suppliers parts")
               .then((results) => {
                 resolve(results).catch((error) => {
-                  resolve(error)
-                })
+                  resolve(error);
+                });
               })
               .catch((error) => {
-                resolve(error)
-              })
+                resolve(error);
+              });
           })
           .catch((error) => {
-            resolve(error)
-          })
+            resolve(error);
+          });
       }).catch((error) => {
-        resolve(error)
-      })
+        resolve(error);
+      });
     },
   },
-}
+};

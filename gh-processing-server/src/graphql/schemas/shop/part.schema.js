@@ -1,5 +1,5 @@
-import { gql } from "apollo-server"
-import Part from "../../../db/models/Shop/Part"
+import { gql } from "apollo-server";
+import Part from "../../../db/models/Shop/Part";
 export const typeDefs = gql`
   extend type Query {
     parts: [Part]
@@ -50,11 +50,11 @@ export const typeDefs = gql`
   extend type Mutation {
     CreatePart(part: PartInput): [Part]
   }
-`
+`;
 export const resolvers = {
   Query: {
     parts: () => {
-      return Part.find({}).populate("brand notes machines services categories orders suppliers medias")
+      return Part.find({});
     },
   },
   Mutation: {
@@ -63,9 +63,9 @@ export const resolvers = {
         Part.insertMany({
           ...args.part,
         }).then((results) => {
-          resolve(results)
-        })
-      })
+          resolve(results);
+        });
+      });
     },
   },
-}
+};

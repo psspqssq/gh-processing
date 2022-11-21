@@ -1,5 +1,5 @@
-import { gql } from "apollo-server"
-import Category from "../../../db/models/Shop/Category"
+import { gql } from "apollo-server";
+import Category from "../../../db/models/Shop/Category";
 
 export const typeDefs = gql`
   extend type Query {
@@ -17,11 +17,11 @@ export const typeDefs = gql`
   extend type Mutation {
     CreateCategory(category: CategoryInput): Category
   }
-`
+`;
 export const resolvers = {
   Query: {
     categories: () => {
-      return Category.find({}).populate("parts")
+      return Category.find({});
     },
   },
 
@@ -31,22 +31,21 @@ export const resolvers = {
         Category.create({ ...args.category })
           .then((result) => {
             Category.findById(result._id)
-              .populate("parts")
               .then((results) => {
                 resolve(results).catch((error) => {
-                  resolve(error)
-                })
+                  resolve(error);
+                });
               })
               .catch((error) => {
-                resolve(error)
-              })
+                resolve(error);
+              });
           })
           .catch((error) => {
-            resolve(error)
-          })
+            resolve(error);
+          });
       }).catch((error) => {
-        resolve(error)
-      })
+        resolve(error);
+      });
     },
   },
-}
+};

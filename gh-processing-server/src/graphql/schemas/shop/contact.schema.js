@@ -1,5 +1,5 @@
-import { gql } from "apollo-server"
-import Contact from "../../../db/models/Shop/Contact"
+import { gql } from "apollo-server";
+import Contact from "../../../db/models/Shop/Contact";
 
 export const typeDefs = gql`
   extend type Query {
@@ -21,12 +21,12 @@ export const typeDefs = gql`
   extend type Mutation {
     CreateContact(contact: ContactInput): [Contact]
   }
-`
+`;
 
 export const resolvers = {
   Query: {
     contacts: () => {
-      return Contact.find({}).populate("brands suppliers")
+      return Contact.find({});
     },
   },
 
@@ -34,9 +34,9 @@ export const resolvers = {
     CreateContact: (root, args) => {
       return new Promise((resolve, reject) => {
         Contact.insertMany({ ...args.contact }).then((results) => {
-          resolve(results)
-        })
-      })
+          resolve(results);
+        });
+      });
     },
   },
-}
+};

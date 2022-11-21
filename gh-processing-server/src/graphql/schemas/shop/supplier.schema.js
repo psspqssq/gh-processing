@@ -1,5 +1,5 @@
-import { gql } from "apollo-server"
-import Supplier from "../../../db/models/Shop/Supplier"
+import { gql } from "apollo-server";
+import Supplier from "../../../db/models/Shop/Supplier";
 
 export const typeDefs = gql`
   extend type Query {
@@ -26,11 +26,11 @@ export const typeDefs = gql`
     machines: [ID]
     parts: [ID]
   }
-`
+`;
 export const resolvers = {
   Query: {
     suppliers: () => {
-      return Supplier.find({}).populate("contacts machines parts")
+      return Supplier.find({});
     },
   },
   Mutation: {
@@ -39,9 +39,9 @@ export const resolvers = {
         Supplier.insertMany({
           ...args.supplier,
         }).then((results) => {
-          resolve(results)
-        })
-      })
+          resolve(results);
+        });
+      });
     },
   },
-}
+};

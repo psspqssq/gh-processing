@@ -1,5 +1,5 @@
-import { gql } from "apollo-server"
-import Brand from "../../../db/models/Shop/Brand"
+import { gql } from "apollo-server";
+import Brand from "../../../db/models/Shop/Brand";
 export const typeDefs = gql`
   extend type Query {
     brands: [Brand]
@@ -23,14 +23,14 @@ export const typeDefs = gql`
     CreateBrand(brand: BrandInput): Brand
     UpdateBrand(machines: BrandInput): Brand
   }
-`
+`;
 export const resolvers = {
   Query: {
     brands: () => {
-      return Brand.find({}).populate("contacts machines parts")
+      return Brand.find({});
     },
     brand: (root, args) => {
-      return Brand.findOne({ name: args.name }).populate("machines")
+      return Brand.findOne({ name: args.name });
     },
   },
 
@@ -40,32 +40,33 @@ export const resolvers = {
         Brand.create({ ...args.brand })
           .then((result) => {
             Brand.findById(result._id)
-              .populate("machines")
               .then((results) => {
                 resolve(results).catch((error) => {
-                  resolve(error)
-                })
+                  resolve(error);
+                });
               })
               .catch((error) => {
-                resolve(error)
-              })
+                resolve(error);
+              });
           })
           .catch((error) => {
-            resolve(error)
-          })
+            resolve(error);
+          });
       }).catch((error) => {
-        resolve(error)
-      })
+        resolve(error);
+      });
     },
     UpdateBrand: (root, args) => {
       return new Promise((resolve, reject) => {
-        console.log(args)
-        Brand.findByIdAndUpdate(args.machines.id, { machines: args.machines.machines }, { new: true })
-          .populate("machines")
-          .then((results) => {
-            resolve(results)
-          })
-      })
+        console.log(args);
+        Brand.findByIdAndUpdate(
+          args.machines.id,
+          { machines: args.machines.machines },
+          { new: true }
+        ).then((results) => {
+          resolve(results);
+        });
+      });
     },
   },
-}
+};

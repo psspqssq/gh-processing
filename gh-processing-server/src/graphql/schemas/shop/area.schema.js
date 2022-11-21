@@ -1,5 +1,5 @@
-import { gql } from "apollo-server"
-import Area from "../../../db/models/Shop/Area"
+import { gql } from "apollo-server";
+import Area from "../../../db/models/Shop/Area";
 
 export const typeDefs = gql`
   extend type Query {
@@ -25,15 +25,15 @@ export const typeDefs = gql`
     CreateArea(area: AreaInput): Area
     UpdateArea(machines: AreaInput): Area
   }
-`
+`;
 
 export const resolvers = {
   Query: {
     areas: () => {
-      return Area.find({}).populate("machines services")
+      return Area.find({});
     },
     area: (root, args) => {
-      return Area.findOne({ name: args.name }).populate("machines services")
+      return Area.findOne({ name: args.name });
     },
   },
 
@@ -43,32 +43,33 @@ export const resolvers = {
         Area.create({ ...args.area })
           .then((result) => {
             Area.findById(result._id)
-              .populate("machines services")
               .then((results) => {
                 resolve(results).catch((error) => {
-                  resolve(error)
-                })
+                  resolve(error);
+                });
               })
               .catch((error) => {
-                resolve(error)
-              })
+                resolve(error);
+              });
           })
           .catch((error) => {
-            resolve(error)
-          })
+            resolve(error);
+          });
       }).catch((error) => {
-        resolve(error)
-      })
+        resolve(error);
+      });
     },
     UpdateArea: (root, args) => {
       return new Promise((resolve, reject) => {
-        console.log(args)
-        Area.findByIdAndUpdate(args.machines.id, { machines: args.machines.machines }, { new: true })
-          .populate("machines")
-          .then((results) => {
-            resolve(results)
-          })
-      })
+        console.log(args);
+        Area.findByIdAndUpdate(
+          args.machines.id,
+          { machines: args.machines.machines },
+          { new: true }
+        ).then((results) => {
+          resolve(results);
+        });
+      });
     },
   },
-}
+};

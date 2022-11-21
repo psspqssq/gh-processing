@@ -1,5 +1,5 @@
-import { gql } from "apollo-server"
-import Note from "../../../db/models/Shop/Note"
+import { gql } from "apollo-server";
+import Note from "../../../db/models/Shop/Note";
 export const typeDefs = gql`
   extend type Query {
     notes: [Note]
@@ -26,11 +26,11 @@ export const typeDefs = gql`
   extend type Mutation {
     CreateNote(note: NoteInput): [Note]
   }
-`
+`;
 export const resolvers = {
   Query: {
     notes: () => {
-      return Note.find({}).populate("users")
+      return Note.find({});
     },
   },
   Mutation: {
@@ -39,9 +39,9 @@ export const resolvers = {
         Note.insertMany({
           ...args.note,
         }).then((results) => {
-          resolve(results)
-        })
-      })
+          resolve(results);
+        });
+      });
     },
   },
-}
+};

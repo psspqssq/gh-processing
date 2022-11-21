@@ -1,5 +1,5 @@
-import { gql } from "apollo-server"
-import User from "../../../db/models/Shop/User"
+import { gql } from "apollo-server";
+import User from "../../../db/models/Shop/User";
 
 export const typeDefs = gql`
   extend type Query {
@@ -29,11 +29,11 @@ export const typeDefs = gql`
     notes: [ID]
     orders: [ID]
   }
-`
+`;
 export const resolvers = {
   Query: {
     users: () => {
-      return User.find({}).populate("services notes orders")
+      return User.find({});
     },
   },
   Mutation: {
@@ -42,9 +42,9 @@ export const resolvers = {
         User.insertMany({
           ...args.user,
         }).then((results) => {
-          resolve(results)
-        })
-      })
+          resolve(results);
+        });
+      });
     },
   },
-}
+};
