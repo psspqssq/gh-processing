@@ -1,0 +1,100 @@
+// dat_area.dbf record example
+
+{ AREA: 'FILLER ROOM' }
+
+// dat_cat.dbf record example
+
+{ CAT: 'SHIELD' }
+
+// machinery.dbf record example
+
+{
+  MACHINERY: 'STRETCH WRAPPING',
+  DRAWING: '',
+  AREA: 'COOLER',
+  BRAND: 'PHOENIX',
+  MODEL: 'PRTL2150',
+  SN: '17104383',
+  DETAILS: '120 VOLTS, 12 AMPS\r\n' +
+    'MANUAL: Stretch Wrapping Manual Model PRTL2150.pdf
+                                                                       F',
+  _NullFlags: NaN
+}
+
+// parts.dbf record example
+
+{
+  PART_NO: '2711-T6C20D8',
+  PART_DESC: 'ALLEN-DRADLEY PANELVIEW PLUS 600',
+  CAT: 'SCREEN',
+  MACHINERY: 'GENERAL',
+  UN_STOCK: 1,
+  STOCK_NO: 'D07',
+  UN_ORDER: 1,
+  UNIT_PRI: 0,
+  REOR_LVL: 0,
+  DISCONTD: false,
+  NOTES: '',
+  S_N: '',
+  MODEL: 'PANELVIEW PLUS 600',
+  SUB_STOCK: '0',
+  SUP_NAM: 'ONE SOURCE DISTRIBUTORS',
+  SUP_ADDR: '2780 E PALO VERDE ST, YUMA, AZ',
+  PHONE: '928-782-4311',
+  EMAIL: '',
+  PIC: '',
+  BRAND: 'A-B',
+  PEN_ORD: false,
+  PENORD_BY: '',
+  PO_NUM: null,
+  FEC_ORD: 2013-09-17T00:00:00.000Z,
+  DAY_ORD: null,
+  CAN: false,
+  B_ORD: false,
+  HOLD: false,
+  TXTBACK_OR: 0,
+  BIMAGE: '',
+  PTOO: false,
+  DRAWING: '',
+  _NullFlags: NaN
+}
+
+// dat_notes.dbf record example
+
+{
+  DAT_NO: 139,
+  DAT_NBY: '',
+  DAT_PEN: null,
+  DAT_ASU: 'HOMO',
+  DAT_NOT: 'hydraulic unit oil sae 68 cantidad 2.4 gal
+                                                                                                                            *',
+  DAT_NOT2: '
+                                                                                                                             \x00',      
+  DAT_DATE: 2021-10-28T00:00:00.000Z,
+  DAT_EDATE: 2021-10-28T00:00:00.000Z,
+  DAT_USE: 'ARTURO',
+  _NullFlags: NaN
+}
+
+// dat_mpr.dbf record example
+{
+  MAC_ID: 'HOMOGENIZER',
+  USER_ID: 'ARTURO',
+  MAINTENANC: true,
+  PART_REPLA: true,
+  DETAILS: 'aceite 320 cantidad 2.9 gal
+                                                                                                                            \x1B',       
+  DATE: 2021-11-17T00:00:00.000Z,
+  ASUNTO: 'GEAR BOX',
+  TO_FIX: false,
+  REQUESTOR: 'ARTURO',
+  AREA: 'RAW ROOM',
+  ENDDATE: 2021-11-16T00:00:00.000Z,
+  BRAND: '',
+  MODEL: '',
+  SN: '',
+  SOLUTION: 'SE CAMBIO GEAR BOX ( NEW )',
+  REGNO: 3259,
+  REC: 30,
+  _NullFlags: NaN
+}
