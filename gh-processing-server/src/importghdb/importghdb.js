@@ -29,7 +29,6 @@ async function importAreas() {
   let records = await readDBFFile(dbFilenames.AREADBF);
   for (let record of records) {
     console.log(record);
-    continue;
     createArea(record);
   }
 }
@@ -39,7 +38,6 @@ async function importCategories() {
   let records = await readDBFFile(dbFilenames.CATEGORIESDBF);
   for (let record of records) {
     console.log(record);
-    continue;
     createCategory(record);
   }
 }
@@ -47,15 +45,12 @@ async function importCategories() {
 // Machines come from machinery.dbf
 // Areas comes from machinery.dbf
 // Brands comes from machinery.dbf
-// Contacts comes from machinery.dbf
 // Media comes from machinery.dbf
-// Suppliers comes from machinery.dbf
 
 async function importMachines() {
   let records = await readDBFFile(dbFilenames.MACHINERYDBF);
   for (let record of records) {
     console.log(record);
-    continue;
     let createMachineQuery = await createMachine(record);
     createMachineQuery.subscribe({
       next: (data) => {
@@ -66,7 +61,6 @@ async function importMachines() {
         createAreaFromMachine(record, machineid);
         createBrandFromMachine(record, machineid);
         createMediaFromMachine(record, machineid);
-        createSupplierFromMachine(record, machineid);
       },
       error: (error) =>
         console.log(`received error ${JSON.stringify(error, null, 2)}`),
@@ -88,7 +82,6 @@ async function importParts() {
   let records = await readDBFFile(dbFilenames.PARTSDBF);
   for (let record of records) {
     console.log(record);
-    continue;
     createPart(record);
     createOrderFromPart(record);
     createCategoryFromPart(record, partID);
@@ -126,12 +119,12 @@ async function importServices() {
 
 async function test() {
   console.log("Downloading old database into machine...");
-  // importAreas();
-  // importCategories();
-  // importMachines();
+  importAreas();
+  importCategories();
+  importMachines();
   // importParts();
   // importNotes();
-  importServices();
+  // importServices();
 }
 
 test();
