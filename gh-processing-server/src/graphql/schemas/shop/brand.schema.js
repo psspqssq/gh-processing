@@ -8,9 +8,9 @@ export const typeDefs = gql`
   type Brand {
     id: ID!
     name: String
-    contacts: [ID]
-    machines: [ID]
-    parts: [ID]
+    contacts: [Contact]
+    machines: [Machine]
+    parts: [Part]
   }
   input BrandInput {
     id: ID
@@ -27,10 +27,10 @@ export const typeDefs = gql`
 export const resolvers = {
   Query: {
     brands: () => {
-      return Brand.find({});
+      return Brand.find({}).populate("machines");
     },
     brand: (root, args) => {
-      return Brand.findOne({ name: args.name });
+      return Brand.findOne({ name: args.name }).populate("machines");
     },
   },
 
@@ -40,6 +40,7 @@ export const resolvers = {
         Brand.create({ ...args.brand })
           .then((result) => {
             Brand.findById(result._id)
+              .populate("machines")
               .then((results) => {
                 resolve(results).catch((error) => {
                   resolve(error);
@@ -59,11 +60,7 @@ export const resolvers = {
     UpdateBrand: (root, args) => {
       return new Promise((resolve, reject) => {
         console.log(args);
-        Brand.findByIdAndUpdate(
-          args.machines.id,
-          { machines: args.machines.machines },
-          { new: true }
-        ).then((results) => {
+        Brand.findByIdAndUpdate(args.machines.id, { machines: args.machines.machines }, { new: true }).then((results) => {
           resolve(results);
         });
       });

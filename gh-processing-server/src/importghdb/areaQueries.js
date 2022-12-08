@@ -26,10 +26,8 @@ export const createArea = (record) => {
       },
     };
     execute(link, gqlmutation).subscribe({
-      next: (data) =>
-        console.log(`received data: ${JSON.stringify(data, null, 2)}`),
-      error: (error) =>
-        console.log(`received error ${JSON.stringify(error, null, 2)}`),
+      next: (data) => console.log(`received data: ${JSON.stringify(data, null, 2)}`),
+      error: (error) => console.log(`received error ${JSON.stringify(error, null, 2)}`),
       complete: () => console.log(`complete`),
     });
   }
@@ -45,7 +43,10 @@ export const getArea = async (record) => {
             area(name: $name) {
               id
               name
-              machines
+              machines {
+                id
+                name
+              }
             }
           }
         `,
@@ -66,20 +67,15 @@ export const createAreaFromMachine = async (record, id) => {
         next: (data) => {
           if (data.data.area != null) {
             console.log(`${sanitizeName(record.AREA)} already on db`);
-            if (
-              data.data.area.machines == undefined ||
-              data.data.area.machines[0] == null
-            ) {
-              console.log(`update from undefined ${data.area.machines}`);
+            if (data.data.area.machines == undefined || data.data.area.machines[0] == null) {
+              console.log(`update from undefined ${data.data.area.id}`);
               const newMachines = [id];
               resolve(updateAreaMachines(newMachines, data.data.area.id));
             } else {
-              console.log(`Defined machines: ${data.data.area.machines}`);
-              console.log(`Current machine: ${id}`);
               let inlist = false;
               Promise.all(
                 data.data.area.machines.map((machine) => {
-                  if (machine == id) inlist = true;
+                  if (machine.id == id) inlist = true;
                 })
               ).then(() => {
                 if (inlist) {
@@ -89,12 +85,9 @@ export const createAreaFromMachine = async (record, id) => {
                   let newMachines = [id];
                   Promise.all(
                     data.data.area.machines.map((machine) => {
-                      console.log(`Machine list iter: ${machine}`);
-                      console.log(`new Machines: ${newMachines}`);
-                      newMachines = [...newMachines, machine];
+                      newMachines = [...newMachines, machine.id];
                     })
                   ).then(() => {
-                    console.log(`Area ID: ${data.data.area.id}`);
                     resolve(updateAreaMachines(newMachines, data.data.area.id));
                   });
                 }
@@ -108,7 +101,10 @@ export const createAreaFromMachine = async (record, id) => {
                   CreateArea(area: $input) {
                     id
                     name
-                    machines
+                    machines {
+                      id
+                      name
+                    }
                   }
                 }
               `,
@@ -121,16 +117,13 @@ export const createAreaFromMachine = async (record, id) => {
               },
             };
             execute(link, gqlmutation).subscribe({
-              next: (data) =>
-                console.log(`received data: ${JSON.stringify(data, null, 2)}`),
-              error: (error) =>
-                console.log(`received error ${JSON.stringify(error, null, 2)}`),
+              next: (data) => console.log(`received data: ${JSON.stringify(data, null, 2)}`),
+              error: (error) => console.log(`received error ${JSON.stringify(error, null, 2)}`),
               complete: () => console.log(`complete`),
             });
           }
         },
-        error: (error) =>
-          console.log(`received error ${JSON.stringify(error, null, 2)}`),
+        error: (error) => console.log(`received error ${JSON.stringify(error, null, 2)}`),
         complete: () => {},
       });
     }
@@ -145,7 +138,10 @@ export const updateAreaMachines = async (machines, areaId) => {
         UpdateArea(machines: $input) {
           id
           name
-          machines
+          machines {
+            id
+            name
+          }
         }
       }
     `,
@@ -158,8 +154,7 @@ export const updateAreaMachines = async (machines, areaId) => {
   };
   execute(link, gqlmutation).subscribe({
     next: (data) => {}, //console.log(`received data: ${JSON.stringify(data, null, 2)}`),
-    error: (error) =>
-      console.log(`received error ${JSON.stringify(error, null, 2)}`),
+    error: (error) => console.log(`received error ${JSON.stringify(error, null, 2)}`),
     complete: () => console.log(`complete`),
   });
 };

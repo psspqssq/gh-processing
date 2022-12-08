@@ -1,11 +1,7 @@
 import { DBFFile } from "dbffile";
 import { createPart } from "./partQueries";
 import { createMachine, createMachineFromPart } from "./machineQueries";
-import {
-  createArea,
-  createAreaFromMachine,
-  createAreaFromService,
-} from "./areaQueries";
+import { createArea, createAreaFromMachine, createAreaFromService } from "./areaQueries";
 import { createBrandFromMachine, createBrandFromPart } from "./brandQueries";
 import { createCategory, createCategoryFromPart } from "./categoryQueries";
 import { createNote, createNoteFromPart } from "./noteQueries";
@@ -55,14 +51,12 @@ async function importMachines() {
       next: (data) => {
         let machineid = "";
         if ("machine" in data.data) machineid = data.data.machine.id;
-        if ("CreateMachine" in data.data)
-          machineid = data.data.CreateMachine.id;
+        if ("CreateMachine" in data.data) machineid = data.data.CreateMachine.id;
         createAreaFromMachine(record, machineid);
-        //createBrandFromMachine(record, machineid);
+        createBrandFromMachine(record, machineid);
         //createMediaFromMachine(record, machineid);
       },
-      error: (error) =>
-        console.log(`received error ${JSON.stringify(error, null, 2)}`),
+      error: (error) => console.log(`received error ${JSON.stringify(error, null, 2)}`),
       complete: () => console.log(`complete`),
     });
   }
@@ -118,8 +112,8 @@ async function importServices() {
 
 async function test() {
   console.log("Downloading old database into machine...");
-  //importAreas();
-  //importCategories();
+  importAreas();
+  importCategories();
   importMachines();
   // importParts();
   // importNotes();

@@ -4,3 +4,4 @@ gh-processing-server/node_modules/dbffile/*
 !gh-processing-server/node_modules/dbffile/dist
 gh-processing-server/.env
 gh-processing-ui/node_modules
+DATA08-15-22/

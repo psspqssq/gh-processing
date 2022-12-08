@@ -8,7 +8,7 @@ export const typeDefs = gql`
   type Category {
     id: ID!
     name: String
-    parts: [ID]
+    parts: [Part]
   }
   input CategoryInput {
     name: String
@@ -21,7 +21,7 @@ export const typeDefs = gql`
 export const resolvers = {
   Query: {
     categories: () => {
-      return Category.find({});
+      return Category.find({}).populate("parts");
     },
   },
 
