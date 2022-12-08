@@ -1,6 +1,6 @@
 import { gql } from "apollo-server";
 import Area from "../../../db/models/Shop/Area";
-
+// type Area machines and services should not have ID as reply
 export const typeDefs = gql`
   extend type Query {
     areas: [Area]
@@ -10,8 +10,8 @@ export const typeDefs = gql`
     id: ID!
     name: String!
     location: String
-    machines: [Machine]
-    services: [Service]
+    machines: [ID]
+    services: [ID]
   }
 
   input AreaInput {
@@ -19,7 +19,7 @@ export const typeDefs = gql`
     name: String
     location: String
     machines: [ID]
-    services: [String]
+    services: [ID]
   }
   extend type Mutation {
     CreateArea(area: AreaInput): Area

@@ -9,12 +9,13 @@ export const typeDefs = gql`
     id: ID!
     address: String
     type: Int
-    machines: [Machine]
-    parts: [Part]
+    machines: [ID]
+    parts: [ID]
     description: String
   }
 
   input MediaInput {
+    id: ID!
     address: String
     type: Int
     machines: [ID]

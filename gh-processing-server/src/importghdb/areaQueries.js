@@ -37,27 +37,25 @@ export const createArea = (record) => {
 
 // Since this is an async function I can't give a result until it is resolved, so I'll return the observable and subscribe on it.
 export const getArea = async (record) => {
-  if (sanitizeName(record.AREA) != undefined) {
-    const areaquery = {
-      query: gql`
-        query area($name: String!) {
-          area(name: $name) {
-            id
-            name
-            machines {
+  return new Promise(async (resolve, reject) => {
+    if (sanitizeName(record.AREA) != undefined) {
+      const areaquery = {
+        query: gql`
+          query area($name: String!) {
+            area(name: $name) {
               id
               name
+              machines
             }
           }
-        }
-      `,
-      variables: {
-        name: sanitizeName(record.AREA),
-      },
-    };
-    return execute(link, areaquery);
-  }
-  return undefined;
+        `,
+        variables: {
+          name: sanitizeName(record.AREA),
+        },
+      };
+      resolve(execute(link, areaquery));
+    }
+  });
 };
 
 export const createAreaFromMachine = async (record, id) => {
@@ -68,19 +66,20 @@ export const createAreaFromMachine = async (record, id) => {
         next: (data) => {
           if (data.data.area != null) {
             console.log(`${sanitizeName(record.AREA)} already on db`);
-            console.log(data.data.area);
             if (
               data.data.area.machines == undefined ||
               data.data.area.machines[0] == null
             ) {
-              console.log("update from undefined");
+              console.log(`update from undefined ${data.area.machines}`);
               const newMachines = [id];
               resolve(updateAreaMachines(newMachines, data.data.area.id));
             } else {
+              console.log(`Defined machines: ${data.data.area.machines}`);
+              console.log(`Current machine: ${id}`);
               let inlist = false;
               Promise.all(
                 data.data.area.machines.map((machine) => {
-                  if (machine.id == id) inlist = true;
+                  if (machine == id) inlist = true;
                 })
               ).then(() => {
                 if (inlist) {
@@ -88,12 +87,14 @@ export const createAreaFromMachine = async (record, id) => {
                   resolve(getArea(record));
                 } else {
                   let newMachines = [id];
-                  console.log(data.data.area);
                   Promise.all(
                     data.data.area.machines.map((machine) => {
-                      newMachines = [...newMachines, machine.id];
+                      console.log(`Machine list iter: ${machine}`);
+                      console.log(`new Machines: ${newMachines}`);
+                      newMachines = [...newMachines, machine];
                     })
                   ).then(() => {
+                    console.log(`Area ID: ${data.data.area.id}`);
                     resolve(updateAreaMachines(newMachines, data.data.area.id));
                   });
                 }
@@ -107,10 +108,7 @@ export const createAreaFromMachine = async (record, id) => {
                   CreateArea(area: $input) {
                     id
                     name
-                    machines {
-                      name
-                      details
-                    }
+                    machines
                   }
                 }
               `,
@@ -147,10 +145,7 @@ export const updateAreaMachines = async (machines, areaId) => {
         UpdateArea(machines: $input) {
           id
           name
-          machines {
-            name
-            details
-          }
+          machines
         }
       }
     `,

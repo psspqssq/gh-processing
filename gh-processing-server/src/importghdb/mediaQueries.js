@@ -1,11 +1,11 @@
-import { execute, makePromise } from "apollo-link"
-import { createHttpLink } from "apollo-link-http"
-import gql from "graphql-tag"
-import fetch from "node-fetch"
-import { sanitizeName } from "./sanitizeName"
+import { execute, makePromise } from "apollo-link";
+import { createHttpLink } from "apollo-link-http";
+import gql from "graphql-tag";
+import fetch from "node-fetch";
+import { sanitizeName } from "./sanitizeName";
 
-const uri = "http://localhost:3333/graphql"
-const link = createHttpLink({ uri, fetch })
+const uri = "http://localhost:3333/graphql";
+const link = createHttpLink({ uri, fetch });
 
 export const createMedia = (record) => {
   if (record.DRAWING != undefined) {
@@ -25,14 +25,16 @@ export const createMedia = (record) => {
           description: "Auto-generated on import",
         },
       },
-    }
+    };
     execute(link, gqlmutation).subscribe({
-      next: (data) => console.log(`received data: ${JSON.stringify(data, null, 2)}`),
-      error: (error) => console.log(`received error ${JSON.stringify(error, null, 2)}`),
+      next: (data) =>
+        console.log(`received data: ${JSON.stringify(data, null, 2)}`),
+      error: (error) =>
+        console.log(`received error ${JSON.stringify(error, null, 2)}`),
       complete: () => console.log(`complete`),
-    })
+    });
   }
-}
+};
 export const getMedia = async (record) => {
   if (sanitizeName(record.DRAWING) != undefined) {
     const mediaquery = {
@@ -42,10 +44,7 @@ export const getMedia = async (record) => {
             id
             address
             description
-            machines {
-              id
-              name
-            }
+            machines
           }
         }
       `,
@@ -53,50 +52,55 @@ export const getMedia = async (record) => {
         address: record.DRAWING,
         description: "Auto-generated on import",
       },
-    }
-    return execute(link, mediaquery)
+    };
+    return execute(link, mediaquery);
   }
-  return undefined
-}
+  return undefined;
+};
 
 export const createMediaFromMachine = async (record, id) => {
   return new Promise(async (resolve, reject) => {
     if (record.DRAWING != undefined) {
-      let mediaQueryResults = await getMedia(record)
+      let mediaQueryResults = await getMedia(record);
       mediaQueryResults.subscribe({
         next: (data) => {
           if (data.data.media != null) {
-            console.log(`${record.DRAWING} already on db`)
-            console.log(data.data.media)
-            if (data.data.media.machines == undefined || data.data.media.machines[0] == null) {
-              console.log("update from undefined")
-              const newMachines = [id]
-              resolve(updateMediaMachines(newMachines, data.data.media.id))
+            console.log(`${record.DRAWING} already on db`);
+            console.log(data.data.media);
+            if (
+              data.data.media.machines == undefined ||
+              data.data.media.machines[0] == null
+            ) {
+              console.log("update from undefined");
+              const newMachines = [id];
+              resolve(updateMediaMachines(newMachines, data.data.media.id));
             } else {
-              let inlist = false
+              let inlist = false;
               Promise.all(
                 data.data.media.machines.map((machine) => {
-                  if (machine.id == id) inlist = true
+                  if (machine.id == id) inlist = true;
                 })
               ).then(() => {
                 if (inlist) {
-                  console.log("already on record")
-                  resolve(getMedia(record))
+                  console.log("already on record");
+                  resolve(getMedia(record));
                 } else {
-                  let newMachines = [id]
-                  console.log(data.data.media)
+                  let newMachines = [id];
+                  console.log(data.data.media);
                   Promise.all(
                     data.data.media.machines.map((machine) => {
-                      newMachines = [...newMachines, machine.id]
+                      newMachines = [...newMachines, machine.id];
                     })
                   ).then(() => {
-                    resolve(updateMediaMachines(newMachines, data.data.media.id))
-                  })
+                    resolve(
+                      updateMediaMachines(newMachines, data.data.media.id)
+                    );
+                  });
                 }
-              })
+              });
             }
           } else {
-            console.log(`${sanitizeName(record.AREA)} not on db`)
+            console.log(`${sanitizeName(record.AREA)} not on db`);
             const gqlmutation = {
               query: gql`
                 mutation createMedia($input: MediaInput) {
@@ -104,10 +108,7 @@ export const createMediaFromMachine = async (record, id) => {
                     id
                     address
                     description
-                    machines {
-                      name
-                      details
-                    }
+                    machines
                   }
                 }
               `,
@@ -118,22 +119,25 @@ export const createMediaFromMachine = async (record, id) => {
                   description: "Auto-generated on import",
                 },
               },
-            }
+            };
             execute(link, gqlmutation).subscribe({
-              next: (data) => console.log(`received data: ${JSON.stringify(data, null, 2)}`),
-              error: (error) => console.log(`received error ${JSON.stringify(error, null, 2)}`),
+              next: (data) =>
+                console.log(`received data: ${JSON.stringify(data, null, 2)}`),
+              error: (error) =>
+                console.log(`received error ${JSON.stringify(error, null, 2)}`),
               complete: () => console.log(`complete`),
-            })
+            });
           }
         },
-        error: (error) => console.log(`received error ${JSON.stringify(error, null, 2)}`),
+        error: (error) =>
+          console.log(`received error ${JSON.stringify(error, null, 2)}`),
         complete: () => {},
-      })
+      });
     }
-  })
-}
+  });
+};
 export const updateMediaMachines = async (machines, mediaId) => {
-  console.log(`updating ${machines.length} machine records`)
+  console.log(`updating ${machines.length} machine records`);
   const gqlmutation = {
     query: gql`
       mutation updateMedia($input: MediaInput) {
@@ -141,10 +145,7 @@ export const updateMediaMachines = async (machines, mediaId) => {
           id
           address
           description
-          machines {
-            name
-            details
-          }
+          machines
         }
       }
     `,
@@ -155,10 +156,11 @@ export const updateMediaMachines = async (machines, mediaId) => {
         description: "Auto-generated on import",
       },
     },
-  }
+  };
   execute(link, gqlmutation).subscribe({
     next: (data) => {}, //console.log(`received data: ${JSON.stringify(data, null, 2)}`),
-    error: (error) => console.log(`received error ${JSON.stringify(error, null, 2)}`),
+    error: (error) =>
+      console.log(`received error ${JSON.stringify(error, null, 2)}`),
     complete: () => console.log(`complete`),
-  })
-}
+  });
+};

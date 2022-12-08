@@ -12,8 +12,8 @@ export const typeDefs = gql`
     arriveddate: String
     receivedquantity: Int
     backorder: Float
-    user: User
-    part: Part
+    user: ID
+    part: ID
   }
 
   input OrderInput {

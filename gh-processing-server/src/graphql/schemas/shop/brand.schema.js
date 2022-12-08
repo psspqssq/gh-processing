@@ -8,9 +8,9 @@ export const typeDefs = gql`
   type Brand {
     id: ID!
     name: String
-    contacts: [Contact]
-    machines: [Machine]
-    parts: [Part]
+    contacts: [ID]
+    machines: [ID]
+    parts: [ID]
   }
   input BrandInput {
     id: ID

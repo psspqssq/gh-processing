@@ -13,9 +13,9 @@ export const typeDefs = gql`
     name: String
     address: String
     phone: String
-    contacts: [Contact]
-    machines: [Machine]
-    parts: [Part]
+    contacts: [ID]
+    machines: [ID]
+    parts: [ID]
   }
   input SupplierInput {
     type: Int

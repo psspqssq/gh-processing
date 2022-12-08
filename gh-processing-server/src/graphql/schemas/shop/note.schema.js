@@ -11,7 +11,7 @@ export const typeDefs = gql`
     open: Boolean
     subject: String
     note: String
-    users: [User]
+    users: [ID]
   }
 
   input NoteInput {

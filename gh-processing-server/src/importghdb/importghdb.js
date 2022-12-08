@@ -21,7 +21,7 @@ import * as dbFilenames from "./dbFileNames";
 
 async function readDBFFile(filename) {
   let dbf = await DBFFile.open(filename);
-  return await dbf.readRecords();
+  return dbf.readRecords();
 }
 
 // Areas come from dat_area.dbf
@@ -50,7 +50,6 @@ async function importCategories() {
 async function importMachines() {
   let records = await readDBFFile(dbFilenames.MACHINERYDBF);
   for (let record of records) {
-    console.log(record);
     let createMachineQuery = await createMachine(record);
     createMachineQuery.subscribe({
       next: (data) => {
@@ -59,8 +58,8 @@ async function importMachines() {
         if ("CreateMachine" in data.data)
           machineid = data.data.CreateMachine.id;
         createAreaFromMachine(record, machineid);
-        createBrandFromMachine(record, machineid);
-        createMediaFromMachine(record, machineid);
+        //createBrandFromMachine(record, machineid);
+        //createMediaFromMachine(record, machineid);
       },
       error: (error) =>
         console.log(`received error ${JSON.stringify(error, null, 2)}`),
@@ -119,8 +118,8 @@ async function importServices() {
 
 async function test() {
   console.log("Downloading old database into machine...");
-  importAreas();
-  importCategories();
+  //importAreas();
+  //importCategories();
   importMachines();
   // importParts();
   // importNotes();

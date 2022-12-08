@@ -17,13 +17,13 @@ export const typeDefs = gql`
     price: Float
     code: String
     brand: Brand
-    orders: [Order]
-    medias: [Media]
-    notes: [Note]
-    machines: [Machine]
-    services: [Service]
-    categories: [Category]
-    suppliers: [Supplier]
+    orders: [ID]
+    medias: [ID]
+    notes: [ID]
+    machines: [ID]
+    services: [ID]
+    categories: [ID]
+    suppliers: [ID]
   }
 
   input PartInput {

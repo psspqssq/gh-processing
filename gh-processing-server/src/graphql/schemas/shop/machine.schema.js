@@ -12,11 +12,11 @@ export const typeDefs = gql`
     model: String
     serialnumber: String
     brand: Brand
-    notes: [Note]
-    areas: [Area]
-    services: [Service]
-    suppliers: [Supplier]
-    parts: [Part]
+    notes: [ID]
+    areas: [ID]
+    services: [ID]
+    suppliers: [ID]
+    parts: [ID]
   }
 
   input MachineInput {

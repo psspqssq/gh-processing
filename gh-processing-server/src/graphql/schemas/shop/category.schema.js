@@ -8,7 +8,7 @@ export const typeDefs = gql`
   type Category {
     id: ID!
     name: String
-    parts: [Part]
+    parts: [ID]
   }
   input CategoryInput {
     name: String

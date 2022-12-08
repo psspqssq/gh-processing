@@ -9,8 +9,8 @@ export const typeDefs = gql`
     id: ID!
     name: String
     phone: String
-    brands: [Brand]
-    suppliers: [Supplier]
+    brands: [ID]
+    suppliers: [ID]
   }
   input ContactInput {
     name: String

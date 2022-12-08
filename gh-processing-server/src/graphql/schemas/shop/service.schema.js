@@ -15,11 +15,11 @@ export const typeDefs = gql`
     subject: String
     body: String
     completeddate: String
-    machines: [Machine]
-    areas: [Area]
-    parts: [Part]
-    notes: [Note]
-    users: [User]
+    machines: [ID]
+    areas: [ID]
+    parts: [ID]
+    notes: [ID]
+    users: [ID]
   }
   input ServiceInput {
     type: Int
