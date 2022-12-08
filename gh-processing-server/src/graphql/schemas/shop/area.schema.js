@@ -63,7 +63,11 @@ export const resolvers = {
     UpdateArea: (root, args) => {
       return new Promise((resolve, reject) => {
         console.log(args);
-        Area.findByIdAndUpdate(args.machines.id, { machines: args.machines.machines }, { new: true }).then((results) => {
+        Area.findByIdAndUpdate(
+          args.machines.id,
+          { machines: args.machines.machines },
+          { new: true }
+        ).then((results) => {
           resolve(results);
         });
       });

@@ -36,26 +36,30 @@ export const createMedia = (record) => {
   }
 };
 export const getMedia = async (record) => {
-  if (sanitizeName(record.DRAWING) != undefined) {
-    const mediaquery = {
-      query: gql`
-        query media($address: String!) {
-          media(address: $address) {
-            id
-            address
-            description
-            machines
+  return new Promise(async (resolve, reject) => {
+    if (sanitizeName(record.DRAWING) != undefined) {
+      const mediaquery = {
+        query: gql`
+          query media($address: String!) {
+            media(address: $address) {
+              id
+              address
+              description
+              machines {
+                id
+                name
+              }
+            }
           }
-        }
-      `,
-      variables: {
-        address: record.DRAWING,
-        description: "Auto-generated on import",
-      },
-    };
-    return execute(link, mediaquery);
-  }
-  return undefined;
+        `,
+        variables: {
+          address: record.DRAWING,
+          description: "Auto-generated on import",
+        },
+      };
+      return execute(link, mediaquery);
+    }
+  });
 };
 
 export const createMediaFromMachine = async (record, id) => {
@@ -66,7 +70,6 @@ export const createMediaFromMachine = async (record, id) => {
         next: (data) => {
           if (data.data.media != null) {
             console.log(`${record.DRAWING} already on db`);
-            console.log(data.data.media);
             if (
               data.data.media.machines == undefined ||
               data.data.media.machines[0] == null
@@ -86,7 +89,6 @@ export const createMediaFromMachine = async (record, id) => {
                   resolve(getMedia(record));
                 } else {
                   let newMachines = [id];
-                  console.log(data.data.media);
                   Promise.all(
                     data.data.media.machines.map((machine) => {
                       newMachines = [...newMachines, machine.id];
@@ -108,7 +110,10 @@ export const createMediaFromMachine = async (record, id) => {
                     id
                     address
                     description
-                    machines
+                    machines {
+                      id
+                      name
+                    }
                   }
                 }
               `,
@@ -136,6 +141,7 @@ export const createMediaFromMachine = async (record, id) => {
     }
   });
 };
+
 export const updateMediaMachines = async (machines, mediaId) => {
   console.log(`updating ${machines.length} machine records`);
   const gqlmutation = {
@@ -145,7 +151,10 @@ export const updateMediaMachines = async (machines, mediaId) => {
           id
           address
           description
-          machines
+          machines {
+            id
+            name
+          }
         }
       }
     `,

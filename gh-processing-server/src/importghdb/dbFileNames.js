@@ -1,6 +1,12 @@
-export const AREADBF = "C://Users//pablo//OneDrive//Documents//Projects//gh-processing//DATA08-15-22//DATA//dat_area.dbf";
-export const CATEGORIESDBF = "C://Users//pablo//OneDrive//Documents//Projects//gh-processing//DATA08-15-22//DATA//dat_cat.dbf";
-export const MACHINERYDBF = "C://Users//pablo//OneDrive//Documents//Projects//gh-processing//DATA08-15-22//DATA//machinery.dbf";
-export const PARTSDBF = "C://Users//pablo//OneDrive//Documents//Projects//gh-processing//DATA08-15-22//DATA//parts.dbf";
-export const NOTESDBF = "C://Users//pablo//OneDrive//Documents//Projects//gh-processing//DATA08-15-22//DATA//dat_notes.dbf";
-export const SERVICESDBF = "C://Users//pablo//OneDrive//Documents//Projects//gh-processing//DATA08-15-22//DATA//dat_mpr.dbf";
+export const AREADBF =
+  "C://Users//GH Processing//Documents//Projects//gh-inventory//gh-processing//gh-processing-server//src//importghdb//dbfiles//dat_area.dbf";
+export const CATEGORIESDBF =
+  "C://Users//GH Processing//Documents//Projects//gh-inventory//gh-processing//gh-processing-server//src//importghdb//dbfiles//dat_cat.dbf";
+export const MACHINERYDBF =
+  "C://Users//GH Processing//Documents//Projects//gh-inventory//gh-processing//gh-processing-server//src//importghdb//dbfiles//machinery.dbf";
+export const PARTSDBF =
+  "C://Users//GH Processing//Documents//Projects//gh-inventory//gh-processing//gh-processing-server//src//importghdb//dbfiles//parts.dbf";
+export const NOTESDBF =
+  "C://Users//GH Processing//Documents//Projects//gh-inventory//gh-processing//gh-processing-server//src//importghdb//dbfiles//dat_notes.dbf";
+export const SERVICESDBF =
+  "C://Users//GH Processing//Documents//Projects//gh-inventory//gh-processing//gh-processing-server//src//importghdb//dbfiles//dat_mpr.dbf";

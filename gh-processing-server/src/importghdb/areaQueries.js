@@ -26,8 +26,10 @@ export const createArea = (record) => {
       },
     };
     execute(link, gqlmutation).subscribe({
-      next: (data) => console.log(`received data: ${JSON.stringify(data, null, 2)}`),
-      error: (error) => console.log(`received error ${JSON.stringify(error, null, 2)}`),
+      next: (data) =>
+        console.log(`received data: ${JSON.stringify(data, null, 2)}`),
+      error: (error) =>
+        console.log(`received error ${JSON.stringify(error, null, 2)}`),
       complete: () => console.log(`complete`),
     });
   }
@@ -67,7 +69,10 @@ export const createAreaFromMachine = async (record, id) => {
         next: (data) => {
           if (data.data.area != null) {
             console.log(`${sanitizeName(record.AREA)} already on db`);
-            if (data.data.area.machines == undefined || data.data.area.machines[0] == null) {
+            if (
+              data.data.area.machines == undefined ||
+              data.data.area.machines[0] == null
+            ) {
               console.log(`update from undefined ${data.data.area.id}`);
               const newMachines = [id];
               resolve(updateAreaMachines(newMachines, data.data.area.id));
@@ -117,13 +122,16 @@ export const createAreaFromMachine = async (record, id) => {
               },
             };
             execute(link, gqlmutation).subscribe({
-              next: (data) => console.log(`received data: ${JSON.stringify(data, null, 2)}`),
-              error: (error) => console.log(`received error ${JSON.stringify(error, null, 2)}`),
+              next: (data) =>
+                console.log(`received data: ${JSON.stringify(data, null, 2)}`),
+              error: (error) =>
+                console.log(`received error ${JSON.stringify(error, null, 2)}`),
               complete: () => console.log(`complete`),
             });
           }
         },
-        error: (error) => console.log(`received error ${JSON.stringify(error, null, 2)}`),
+        error: (error) =>
+          console.log(`received error ${JSON.stringify(error, null, 2)}`),
         complete: () => {},
       });
     }
@@ -154,7 +162,8 @@ export const updateAreaMachines = async (machines, areaId) => {
   };
   execute(link, gqlmutation).subscribe({
     next: (data) => {}, //console.log(`received data: ${JSON.stringify(data, null, 2)}`),
-    error: (error) => console.log(`received error ${JSON.stringify(error, null, 2)}`),
+    error: (error) =>
+      console.log(`received error ${JSON.stringify(error, null, 2)}`),
     complete: () => console.log(`complete`),
   });
 };

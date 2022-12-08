@@ -9,13 +9,13 @@ export const typeDefs = gql`
     id: ID!
     address: String
     type: Int
-    machines: [ID]
-    parts: [ID]
+    machines: [Machine]
+    parts: [Part]
     description: String
   }
 
   input MediaInput {
-    id: ID!
+    id: ID
     address: String
     type: Int
     machines: [ID]
@@ -31,7 +31,7 @@ export const typeDefs = gql`
 export const resolvers = {
   Query: {
     medias: () => {
-      return Media.find({});
+      return Media.find({}).populate("machines");
     },
     media: (root, args) => {
       return Media.findOne({ address: args.address });
@@ -43,6 +43,7 @@ export const resolvers = {
         Media.create({ ...args.media })
           .then((result) => {
             Media.findById(result._id)
+              .populate("machines")
               .then((results) => {
                 resolve(results).catch((error) => {
                   resolve(error);
