@@ -1,6 +1,10 @@
 import { DBFFile } from "dbffile";
 import { createPart } from "./partQueries";
-import { createMachine, createMachineFromPart } from "./machineQueries";
+import {
+  createMachine,
+  updateMachineAreas,
+  createMachineFromPart,
+} from "./machineQueries";
 import {
   createArea,
   createAreaFromMachine,
@@ -52,11 +56,14 @@ async function importMachines() {
   for (let record of records) {
     let createMachineQuery = await createMachine(record);
     createMachineQuery.subscribe({
-      next: (data) => {
+      next: async (data) => {
         let machineid = "";
+        let machineAreas = [];
         if ("machine" in data.data) machineid = data.data.machine.id;
-        if ("CreateMachine" in data.data)
+        if ("CreateMachine" in data.data) {
           machineid = data.data.CreateMachine.id;
+          machineAreas = data.data.CreateMachine.areas;
+        }
         createAreaFromMachine(record, machineid);
         createBrandFromMachine(record, machineid);
         createMediaFromMachine(record, machineid);
@@ -118,8 +125,8 @@ async function importServices() {
 
 async function test() {
   console.log("Downloading old database into machine...");
-  importAreas();
-  importCategories();
+  //importAreas();
+  //importCategories();
   importMachines();
   // importParts();
   // importNotes();

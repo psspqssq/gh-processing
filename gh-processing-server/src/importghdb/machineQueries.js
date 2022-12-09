@@ -4,6 +4,7 @@ import { execute, makePromise } from "apollo-link";
 import { createHttpLink } from "apollo-link-http";
 import gql from "graphql-tag";
 import fetch from "node-fetch";
+import Machine from "../db/models/Shop/Machine";
 import { sanitizeName } from "./sanitizeName";
 
 const uri = "http://localhost:3333/graphql";
@@ -48,6 +49,29 @@ export const createMachine = async (record) => {
         complete: () => {},
       });
     }
+  });
+};
+export const updateMachineAreas = async (machineid, areas) => {
+  return new Promise(async (resolve, reject) => {
+    const gqlmutation = {
+      query: gql`
+        mutation updateMachine($input: MachineInput) {
+          UpdateMachine(machine: $input) {
+            id
+            name
+            model
+            serialnumber
+          }
+        }
+      `,
+      variables: {
+        input: {
+          id: machineid,
+          areas: areas,
+        },
+      },
+    };
+    resolve(execute(link, gqlmutation));
   });
 };
 

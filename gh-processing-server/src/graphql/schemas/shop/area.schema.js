@@ -1,6 +1,5 @@
 import { gql } from "apollo-server";
 import Area from "../../../db/models/Shop/Area";
-// type Area machines and services should not have ID as reply
 export const typeDefs = gql`
   extend type Query {
     areas: [Area]
@@ -62,7 +61,6 @@ export const resolvers = {
     },
     UpdateArea: (root, args) => {
       return new Promise((resolve, reject) => {
-        console.log(args);
         Area.findByIdAndUpdate(
           args.machines.id,
           { machines: args.machines.machines },

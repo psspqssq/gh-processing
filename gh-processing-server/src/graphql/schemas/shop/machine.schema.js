@@ -12,11 +12,11 @@ export const typeDefs = gql`
     model: String
     serialnumber: String
     brand: Brand
-    notes: [ID]
-    areas: [ID]
-    services: [ID]
-    suppliers: [ID]
-    parts: [ID]
+    notes: [Note]
+    areas: [Area]
+    services: [Service]
+    suppliers: [Supplier]
+    parts: [Part]
   }
 
   input MachineInput {
@@ -31,14 +31,30 @@ export const typeDefs = gql`
     suppliers: [ID]
     parts: [ID]
   }
+  input MachineUpdateInput {
+    id: ID
+    name: String
+    details: String
+    model: String
+    serialnumber: String
+    brand: ID
+    notes: [ID]
+    areas: [ID]
+    services: [ID]
+    suppliers: [ID]
+    parts: [ID]
+  }
   extend type Mutation {
     CreateMachine(machine: MachineInput): Machine
+    UpdateMachine(machine: MachineUpdateInput): Machine
   }
 `;
 export const resolvers = {
   Query: {
     machines: () => {
-      return Machine.find({});
+      return Machine.find({}).populate(
+        "brands notes areas service suppliers parts"
+      );
     },
     machine: (root, args) => {
       return Machine.findOne({ name: args.name });
@@ -64,6 +80,21 @@ export const resolvers = {
           });
       }).catch((error) => {
         resolve(error);
+      });
+    },
+    UpdateMachine: (root, args) => {
+      return new Promise((resolve, reject) => {
+        Machine.findByIdAndUpdate(
+          args.machine.id,
+          {
+            ...args.machine,
+          },
+          { new: true }
+        )
+          .populate("brands notes areas service suppliers parts")
+          .then((results) => {
+            resolve(results);
+          });
       });
     },
   },

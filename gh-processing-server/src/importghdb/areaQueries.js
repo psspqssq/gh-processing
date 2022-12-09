@@ -121,13 +121,7 @@ export const createAreaFromMachine = async (record, id) => {
                 },
               },
             };
-            execute(link, gqlmutation).subscribe({
-              next: (data) =>
-                console.log(`received data: ${JSON.stringify(data, null, 2)}`),
-              error: (error) =>
-                console.log(`received error ${JSON.stringify(error, null, 2)}`),
-              complete: () => console.log(`complete`),
-            });
+            resolve(execute(link, gqlmutation));
           }
         },
         error: (error) =>
