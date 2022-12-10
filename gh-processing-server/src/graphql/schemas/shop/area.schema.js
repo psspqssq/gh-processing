@@ -42,7 +42,7 @@ export const resolvers = {
         Area.create({ ...args.area })
           .then((result) => {
             Area.findById(result._id)
-              .populate("machines")
+              .populate("machines areas")
               .then((results) => {
                 resolve(results).catch((error) => {
                   resolve(error);
@@ -65,9 +65,11 @@ export const resolvers = {
           args.machines.id,
           { machines: args.machines.machines },
           { new: true }
-        ).then((results) => {
-          resolve(results);
-        });
+        )
+          .populate("machines areas")
+          .then((results) => {
+            resolve(results);
+          });
       });
     },
   },

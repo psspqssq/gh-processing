@@ -59,12 +59,57 @@ async function importMachines() {
       next: async (data) => {
         let machineid = "";
         let machineAreas = [];
-        if ("machine" in data.data) machineid = data.data.machine.id;
+        if ("machine" in data.data) {
+          machineid = data.data.machine.id;
+          data.data.machine.areas.map((area) => {
+            if (area !== null) {
+              machineAreas = [...machineAreas, area.id];
+            }
+          });
+        }
         if ("CreateMachine" in data.data) {
           machineid = data.data.CreateMachine.id;
-          machineAreas = data.data.CreateMachine.areas;
+          data.data.CreateMachine.areas.map((area) => {
+            if (area !== null) {
+              machineAreas = [...machineAreas, area.id];
+            }
+          });
         }
-        createAreaFromMachine(record, machineid);
+        let createAreaFromMachineQuery = await createAreaFromMachine(
+          record,
+          machineid
+        );
+        createAreaFromMachineQuery.subscribe({
+          next: async (data) => {
+            let newAreaID = null;
+            if ("CreateArea" in data.data) {
+              newAreaID = data.data.CreateArea.id;
+            }
+            if ("area" in data.data) {
+              newAreaID = data.data.area.id;
+            }
+            console.log(`New Area ID: ${newAreaID}`);
+            if (!machineAreas.includes(newAreaID)) {
+              let itHappen = await updateMachineAreas(machineid, [
+                ...machineAreas,
+                newAreaID,
+              ]);
+              itHappen.subscribe({
+                next: (data) => {
+                  console.log(
+                    `received data\n${JSON.stringify(data, null, 2)}`
+                  );
+                },
+                error: (error) =>
+                  console.log(
+                    `received error ${JSON.stringify(error, null, 2)}`
+                  ),
+              });
+            } else {
+              console.log("Area already on machine");
+            }
+          },
+        });
         createBrandFromMachine(record, machineid);
         createMediaFromMachine(record, machineid);
       },

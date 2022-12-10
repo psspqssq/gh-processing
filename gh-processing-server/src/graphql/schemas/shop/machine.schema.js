@@ -57,7 +57,9 @@ export const resolvers = {
       );
     },
     machine: (root, args) => {
-      return Machine.findOne({ name: args.name });
+      return Machine.findOne({ name: args.name }).populate(
+        "brands notes areas service suppliers parts"
+      );
     },
   },
   Mutation: {
@@ -66,6 +68,7 @@ export const resolvers = {
         Machine.create({ ...args.machine })
           .then((result) => {
             Machine.findById(result._id)
+              .populate("areas")
               .then((results) => {
                 resolve(results).catch((error) => {
                   resolve(error);

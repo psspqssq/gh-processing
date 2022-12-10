@@ -133,31 +133,28 @@ export const createAreaFromMachine = async (record, id) => {
 };
 
 export const updateAreaMachines = async (machines, areaId) => {
-  console.log(`updating ${machines.length} machine records`);
-  const gqlmutation = {
-    query: gql`
-      mutation updateArea($input: AreaInput) {
-        UpdateArea(machines: $input) {
-          id
-          name
-          machines {
+  return new Promise(async (resolve, reject) => {
+    console.log(`updating ${machines.length} machine records`);
+    const gqlmutation = {
+      query: gql`
+        mutation updateArea($input: AreaInput) {
+          UpdateArea(machines: $input) {
             id
             name
+            machines {
+              id
+              name
+            }
           }
         }
-      }
-    `,
-    variables: {
-      input: {
-        id: areaId,
-        machines: machines,
+      `,
+      variables: {
+        input: {
+          id: areaId,
+          machines: machines,
+        },
       },
-    },
-  };
-  execute(link, gqlmutation).subscribe({
-    next: (data) => {}, //console.log(`received data: ${JSON.stringify(data, null, 2)}`),
-    error: (error) =>
-      console.log(`received error ${JSON.stringify(error, null, 2)}`),
-    complete: () => console.log(`complete`),
+    };
+    resolve(execute(link, gqlmutation));
   });
 };

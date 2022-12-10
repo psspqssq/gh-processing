@@ -29,6 +29,9 @@ export const createMachine = async (record) => {
                     name
                     model
                     serialnumber
+                    areas {
+                      id
+                    }
                   }
                 }
               `,
@@ -55,7 +58,7 @@ export const updateMachineAreas = async (machineid, areas) => {
   return new Promise(async (resolve, reject) => {
     const gqlmutation = {
       query: gql`
-        mutation updateMachine($input: MachineInput) {
+        mutation updateMachine($input: MachineUpdateInput) {
           UpdateMachine(machine: $input) {
             id
             name
@@ -84,6 +87,10 @@ export const getMachine = async (record) => {
           machine(name: $name) {
             id
             name
+            areas {
+              id
+              name
+            }
           }
         }
       `,
